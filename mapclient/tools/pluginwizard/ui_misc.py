@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'qt/misc.ui'
 #
-# Created: Wed Dec  3 14:46:20 2014
+# Created: Fri Dec 12 11:45:10 2014
 #      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -47,5 +47,5 @@ class Ui_Misc(object):
         self.label_2.setText(QtGui.QApplication.translate("Misc", "Category:  ", None, QtGui.QApplication.UnicodeUTF8))
         self.categoryLineEdit.setPlaceholderText(QtGui.QApplication.translate("Misc", "General", None, QtGui.QApplication.UnicodeUTF8))
         self.label_3.setText(QtGui.QApplication.translate("Misc", "Plugin Location:", None, QtGui.QApplication.UnicodeUTF8))
-        self.pluginLocationEdit.setPlaceholderText(QtGui.QApplication.translate("Misc", "Repository URL", None, QtGui.QApplication.UnicodeUTF8))
+        self.pluginLocationEdit.setPlaceholderText(QtGui.QApplication.translate("Misc", "eg. https://github.com.../archive/master.zip", None, QtGui.QApplication.UnicodeUTF8))
 

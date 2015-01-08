@@ -29,8 +29,9 @@ import site
 import sys
 import pkgutil
 from importlib import import_module
+from mapclient.core.pluginlocationmanager import PluginLocationManager
 
-if sys.version_info < (3, 4):
+if sys.version_info < (3, 0):
     import imp
 else:
     import importlib
@@ -277,6 +278,7 @@ class PluginManager(object):
     def __init__(self):
         self._directories = []
         self._loadDefaultPlugins = True
+        self._pluginLocationManager = PluginLocationManager()
 
     def directories(self):
         return self._directories
@@ -345,22 +347,28 @@ class PluginManager(object):
                 package = imp.reload(sys.modules['mapclientplugins'])
             except Exception:
                 package = importlib.reload(sys.modules['mapclientplugins'])
+        
         for _, modname, ispkg in pkgutil.iter_modules(package.__path__):
-            if ispkg:
+            if ispkg:                
                 try:
                     module = import_module('mapclientplugins.' + modname)
                     if hasattr(module, '__version__') and hasattr(module, '__author__'):
                         logger.info('Loaded plugin \'' + modname + '\' version [' + module.__version__ + '] by ' + module.__author__)
+                    if hasattr(module, '__location__') and hasattr(module, '__stepname__'):
+                        logger.info('Plugin \'' + modname + '\' available from: ' + module.__location__)
+                        self._pluginLocationManager.addLoadedPluginInformation(modname, module.__stepname__, module.__author__, module.__version__, module.__location__)
                 except Exception as e:
-                    if '\n' in e:
+                        
+                    if '\n' in str(e):
                         e = str(e).split('\n')
+                        e_new = ''
+                        for i in range(len(e)):
+                            e_new += e[i] + '  '
+                        logger.warn('Plugin \'' + modname + '\' not loaded')
+                        logger.warn('Reason: {0}'.format(e_new))
                     else:
-                        e = list(e)
-                    e_new = ''
-                    for i in range(len(e)):
-                        e_new += e[i] + '  '
-                    logger.warn('Plugin \'' + modname + '\' not loaded')
-                    logger.warn('Reason: {0}'.format(e_new))
+                        logger.warn('Plugin \'' + modname + '\' not loaded')
+                        logger.warn('Reason: {0}'.format(e))
 
     def readSettings(self, settings):
         self._directories = []

@@ -309,6 +309,7 @@ class Skeleton(object):
         init_file = os.path.join(init_dir, '__init__.py')
         f = open(init_file, 'w')
         f.write(STEP_PACKAGE_INIT_STRING.format(
+            step_name=self._options.getName(),
             package_name=self._options.getFullPackageName(),
             author_name=self._options.getAuthorName(),
             plugin_location=self._options.getPluginLocation())

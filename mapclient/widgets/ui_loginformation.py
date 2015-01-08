@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'qt/loginformation.ui'
 #
-# Created: Wed Nov 26 10:01:58 2014
+# Created: Fri Dec 12 12:07:16 2014
 #      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
