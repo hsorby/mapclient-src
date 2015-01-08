@@ -119,6 +119,10 @@ def winmain():
     window = MainWindow(model)
     window.show()
     
+    missing_dependencies = window._model.pluginManager()._missingDependencies
+    if missing_dependencies:
+        window._model.pluginManager().showMissingDependencies(missing_dependencies)
+    
     return app.exec_()
 
 class ConsumeOutput(object):

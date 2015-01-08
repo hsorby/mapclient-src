@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'qt/advanceddialog.ui'
 #
-# Created: Wed Jan  7 11:09:18 2015
+# Created: Fri Jan  9 10:23:11 2015
 #      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -50,10 +50,6 @@ class Ui_AdvancedDialog(object):
         self.horizontalLayout_2.addWidget(self.updateLabel)
         spacerItem1 = QtGui.QSpacerItem(118, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout_2.addItem(spacerItem1)
-        self.dependenciesButton = QtGui.QPushButton(self.tab)
-        self.dependenciesButton.setMinimumSize(QtCore.QSize(85, 0))
-        self.dependenciesButton.setObjectName("dependenciesButton")
-        self.horizontalLayout_2.addWidget(self.dependenciesButton)
         self.updateButton = QtGui.QPushButton(self.tab)
         self.updateButton.setObjectName("updateButton")
         self.horizontalLayout_2.addWidget(self.updateButton)
@@ -78,7 +74,6 @@ class Ui_AdvancedDialog(object):
         AdvancedDialog.setWindowTitle(QtGui.QApplication.translate("AdvancedDialog", "Advanced", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("AdvancedDialog", "Plugins:", None, QtGui.QApplication.UnicodeUTF8))
         self.analyseButton.setText(QtGui.QApplication.translate("AdvancedDialog", "Analyse Plugins", None, QtGui.QApplication.UnicodeUTF8))
-        self.dependenciesButton.setText(QtGui.QApplication.translate("AdvancedDialog", "Dependencies", None, QtGui.QApplication.UnicodeUTF8))
         self.updateButton.setText(QtGui.QApplication.translate("AdvancedDialog", "Update", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QtGui.QApplication.translate("AdvancedDialog", "Updates", None, QtGui.QApplication.UnicodeUTF8))
 

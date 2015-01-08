@@ -278,6 +278,7 @@ class PluginManager(object):
     def __init__(self):
         self._directories = []
         self._loadDefaultPlugins = True
+        self._missingDependencies = []
         self._pluginLocationManager = PluginLocationManager()
 
     def directories(self):
@@ -348,6 +349,7 @@ class PluginManager(object):
             except Exception:
                 package = importlib.reload(sys.modules['mapclientplugins'])
         
+        self._missingDependencies = []
         for _, modname, ispkg in pkgutil.iter_modules(package.__path__):
             if ispkg:                
                 try:
@@ -358,6 +360,9 @@ class PluginManager(object):
                         logger.info('Plugin \'' + modname + '\' available from: ' + module.__location__)
                         self._pluginLocationManager.addLoadedPluginInformation(modname, module.__stepname__, module.__author__, module.__version__, module.__location__)
                 except Exception as e:
+                    
+                    if type(e) == ImportError:
+                        self._missingDependencies += [modname]
                         
                     if '\n' in str(e):
                         e = str(e).split('\n')
@@ -369,6 +374,13 @@ class PluginManager(object):
                     else:
                         logger.warn('Plugin \'' + modname + '\' not loaded')
                         logger.warn('Reason: {0}'.format(e))
+            
+    def showMissingDependencies(self, missing_dependencies):
+        from mapclient.widgets.missingdependencies import MissingPluginDependecies
+        dlg = MissingPluginDependecies(missing_dependencies)
+        dlg.setModal(True)
+        dlg.fillList()
+        dlg.exec_()
 
     def readSettings(self, settings):
         self._directories = []

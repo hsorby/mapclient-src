@@ -18,7 +18,8 @@ This file is part of MAP Client. (http://launchpad.net/mapclient)
     along with MAP Client.  If not, see <http://www.gnu.org/licenses/>..
 '''
 import pkgutil, os, sys, imp, importlib, collections
-from PySide.QtGui import QDialog, QMessageBox
+from PySide.QtGui import QDialog, QMessageBox, QPushButton, QApplication, QCursor
+from PySide.QtCore import Qt
 
 from mapclient.tools.ui_advanceddialog import Ui_AdvancedDialog
 from mapclient.tools.pluginupdater import PluginUpdater
@@ -41,7 +42,6 @@ class AdvancedDialog(QDialog):
         
     def _makeConnections(self):
         self._ui.updateButton.clicked.connect(self.updatePlugins)
-        self._ui.dependenciesButton.clicked.connect(self.showAdditionalPluginModules)
         self._ui.analyseButton.clicked.connect(self.analysePlugins)
         
     def fillList(self, plugin_updates_dict):
@@ -49,7 +49,6 @@ class AdvancedDialog(QDialog):
         location_string = 'Location Update'
         resource_string = 'Resource Update'
         syntax_string = 'Syntax Update'
-        modules_string = 'Additional Modules Required'
         indentation_string = 'Inconsistent Indentation'
         stringList = [location_string, resource_string, syntax_string, indentation_string]
         
@@ -59,26 +58,19 @@ class AdvancedDialog(QDialog):
                 update = plugin_updates_dict[plugin][index]
                 if update:
                     display_string += stringList[index-1] + ' | '
-            if self._pluginUpdater._additionalPluginModules:
-                display_string += modules_string + ' | '
             if len(display_string) > (len(plugin)+3):
                 self._ui.listWidget.addItem(display_string[:-3])
                 
         if self._ui.listWidget.count() == 0:
             self._ui.updateButton.setEnabled(False)
-            self._ui.dependenciesButton.setEnabled(False)
             self._ui.updateLabel.setText('None of your plugins currently require updating. \nClick \'Analyse Plugins\' to check for more updates.')
         else:
             self._ui.updateButton.setEnabled(True)
-            if self._pluginUpdater._additionalRequiredModules:
-                self._ui.dependenciesButton.setEnabled(True)
-            else:
-                self._ui.dependenciesButton.setEnabled(False)
             self._ui.updateLabel.setText('Please update the above plugins:')
             
     def analysePlugins(self):
         self._pluginUpdater._pluginUpdateDict = {}
-        self._pluginUpdater._additionalRequiredModules = []
+        QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
         try:
             package = imp.reload(sys.modules['mapclientplugins'])
         except Exception:
@@ -93,16 +85,15 @@ class AdvancedDialog(QDialog):
                     self._pluginUpdater.fixTabbedIndentation(modname, tabbed_modules, True)
                 plugin_syntax_update = self._pluginUpdater.checkModuleSyntax(_.path)
                 self._pluginUpdater.deleteTempFiles(tabbed_modules)
-                requires_additional_modules = self._pluginUpdater.checkAdditionalModules(modname)
-                if requires_additional_modules:
-                    self._pluginUpdater.additionalRequiredModules(modname)
                 self._pluginUpdater.pluginUpdateDict(modname, plugin_init_update, plugin_resources_update, plugin_syntax_update, \
                                                     plugin_tabbed_indentation, os.path.join(_.path, modname, '__init__.py'), resourcesDir, tabbed_modules)
+        QApplication.restoreOverrideCursor()
         self.fillList(self._pluginUpdater._pluginUpdateDict)
             
     def updatePlugins(self):
         unsuccessful_updates = []
-        self._pluginUpdater._additionalPluginModules = []
+        plugins_to_delete = []
+        QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
         for plugin in self._pluginUpdater._pluginUpdateDict.keys():
             if self._pluginUpdater._pluginUpdateDict[plugin][4] and sys.version_info > (2, 7):
                 self._pluginUpdater.fixTabbedIndentation(plugin, self._pluginUpdater._pluginUpdateDict[plugin][7], False)            
@@ -113,14 +104,15 @@ class AdvancedDialog(QDialog):
             if self._pluginUpdater._pluginUpdateDict[plugin][2]:
                 self._pluginUpdater.updateResourcesFile(plugin, self._pluginUpdater._pluginUpdateDict[plugin][6])
             
-            plugins_to_delete = []
             compare = lambda required_updates, update_report: collections.Counter(required_updates) == collections.Counter(update_report)
             if compare(self._pluginUpdater._pluginUpdateDict[plugin][1:5], [item for item in self._pluginUpdater._successful_plugin_update.values()]):
                 plugins_to_delete += [plugin]
                 self._pluginUpdater._successful_plugin_update = {'indentation_update_sucess':False, 'init_update_success':False, 'resources_update_success':False, 'syntax_update_success':False}
             else:
                 unsuccessful_updates += [plugin]
-            
+
+        QApplication.restoreOverrideCursor()
+        
         for plugin in plugins_to_delete:
             del self._pluginUpdater._pluginUpdateDict[plugin]
         self.fillList(self._pluginUpdater._pluginUpdateDict)
@@ -130,10 +122,5 @@ class AdvancedDialog(QDialog):
             for plugin in unsuccessful_updates:
                 warning_string += '\n\t\t\t' + plugin
             ret = QMessageBox.warning(self, 'Warning', warning_string + '\n\nPlease inspect the program logs for more information.  \t', QMessageBox.Ok)
-
-    def showAdditionalPluginModules(self):
-        from mapclient.tools.additionalpluginmodules import AdditionalPluginModules
-        dlg = AdditionalPluginModules(self._pluginUpdater._additionalPluginModules)
-        dlg.setModal(True)
-        dlg.fillList()
-        dlg.exec_()
+        
+        ret = QMessageBox.information(self, 'Restart Application', 'In order for the updated plugins to be loaded correctly\nMAP Client must be restarted.\n\nPlease save any changes and restart MAP Client.', QMessageBox.Ok)

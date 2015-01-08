@@ -61,10 +61,10 @@ MAPCLIENT_PLUGIN_LOCATIONS = {'autosegmentationstep':['Automatic Segmenter', 'ht
 
 class PluginUpdater:
     
-    _additionalPluginModules = []
-    _pluginUpdateDict = {}
-    _directory = ''
-    _successful_plugin_update = {'init_update_success':False, 'resources_update_success':False, 'syntax_update_success':False, 'indentation_update_sucess':False}
+    def __init__(self, parent=None):
+        self._pluginUpdateDict = {}
+        self._directory = ''
+        self._successful_plugin_update = {'init_update_success':False, 'resources_update_success':False, 'syntax_update_success':False, 'indentation_update_sucess':False}
     
     def updateInitContents(self, plugin, directory):
         if plugin in MAPCLIENT_PLUGIN_LOCATIONS:
@@ -117,9 +117,6 @@ class PluginUpdater:
         except Exception as e:                            
             logger.warn('Syntax update for \'' + plugin + '\' unsuccessful.')
             logger.warn('Reason: ' + e)
-
-    def additionalRequiredModules(self, plugin):
-        self._additionalPluginModules += [plugin]
     
     def fixTabbedIndentation(self, plugin, directories, temp_file):
         for moduleDir in directories:
@@ -188,17 +185,6 @@ class PluginUpdater:
 
     def pluginUpdateDict(self, modname, update_init, update_resources, update_syntax, update_indentation, initDir, resourcesDir, tabbed_modules):
         self._pluginUpdateDict[modname] = [self._directory, update_init, update_resources, update_syntax, update_indentation, initDir, resourcesDir, tabbed_modules]
-        
-    def checkAdditionalModules(self, modname):    
-        '''try:
-            import_module('mapclientplugins' + modname)
-        except Exception as e:
-            print(type(e))
-            print(e)
-            if type(e) == ImportError:
-                return True
-        '''
-        return False
     
     def getAllModulesDirsInTree(self, directory):
         moduleDirs = []

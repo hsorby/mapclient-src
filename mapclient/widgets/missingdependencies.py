@@ -19,19 +19,16 @@ This file is part of MAP Client. (http://launchpad.net/mapclient)
 '''
 from PySide.QtGui import QDialog
 
-from mapclient.tools.ui_additionalpluginmodules import Ui_AdditionalPluginModules
+from mapclient.widgets.ui_missingdependencies import Ui_MissingDependencies
 
-class AdditionalPluginModules(QDialog):
-    '''
-    Displays plugins that require additional plugins from sources outside of GitHub (ie. bitbucket).
-    '''
+class MissingPluginDependecies(QDialog):
     
     def __init__(self, plugins, parent=None):
         '''
         Constructor
         '''
         QDialog.__init__(self, parent)
-        self._ui = Ui_AdditionalPluginModules()
+        self._ui = Ui_MissingDependencies()
         self._ui.setupUi(self)
         self._pluginList = plugins
         

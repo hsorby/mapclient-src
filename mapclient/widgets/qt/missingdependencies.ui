@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>AdditionalPluginModules</class>
- <widget class="QDialog" name="AdditionalPluginModules">
+ <class>MissingDependencies</class>
+ <widget class="QDialog" name="MissingDependencies">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -13,11 +13,15 @@
   <property name="windowTitle">
    <string>Dependencies</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="resources.qrc">
+    <normaloff>:/mapclient/images/icon-app.png</normaloff>:/mapclient/images/icon-app.png</iconset>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QLabel" name="label">
      <property name="text">
-      <string>The following plugins may require additional modules that cannot be downloaded at this time. For each plugin please examine the README.md file and obtain the listed dependencies.</string>
+      <string>The following plugins require additional plackages that are not installed at this time. For each plugin please examine its README.md file and obtain the listed dependencies.</string>
      </property>
      <property name="wordWrap">
       <bool>true</bool>
@@ -57,12 +61,14 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>pushButton</sender>
    <signal>clicked()</signal>
-   <receiver>AdditionalPluginModules</receiver>
+   <receiver>MissingDependencies</receiver>
    <slot>close()</slot>
    <hints>
     <hint type="sourcelabel">
