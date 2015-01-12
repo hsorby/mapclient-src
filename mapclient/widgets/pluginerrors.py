@@ -19,19 +19,30 @@ This file is part of MAP Client. (http://launchpad.net/mapclient)
 '''
 from PySide.QtGui import QDialog
 
-from mapclient.widgets.ui_missingdependencies import Ui_MissingDependencies
+from mapclient.widgets.ui_pluginerrors import Ui_PluginErrors
 
-class MissingPluginDependecies(QDialog):
+class PluginErrors(QDialog):
     
     def __init__(self, plugins, parent=None):
         '''
         Constructor
         '''
         QDialog.__init__(self, parent)
-        self._ui = Ui_MissingDependencies()
+        self._ui = Ui_PluginErrors()
         self._ui.setupUi(self)
-        self._pluginList = plugins
+        self._ui.label.setText('The following plugins could not be loaded correctly.\n\nHover over each plugin for suggested solutions.')
+        self._pluginErrors = plugins
         
     def fillList(self):
-        for plugin in self._pluginList:
-            self._ui.listWidget.addItem(plugin)
+        for error in self._pluginErrors:
+            for plugin in self._pluginErrors[error]: 
+                self._ui.listWidget.addItem(plugin + ' - ' + error)                    
+        
+        for row in range(self._ui.listWidget.count()):
+            item = self._ui.listWidget.item(row)
+            text = item.text().split(' - ')
+            error = text[-1]
+            if error == 'TypeError' or error == 'SyntaxError' or error == 'TabError':
+                item.setToolTip('Please update this plugin using the built-in\nplugin updater under \'Advanced\' in the Plugin Manager\ndialog.')
+            else:
+                item.setToolTip('Please examine the plugin README.md file and\nobtain the listed dependencies.')

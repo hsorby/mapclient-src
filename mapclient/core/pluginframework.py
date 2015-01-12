@@ -278,7 +278,6 @@ class PluginManager(object):
     def __init__(self):
         self._directories = []
         self._loadDefaultPlugins = True
-        self._missingDependencies = []
         self._pluginLocationManager = PluginLocationManager()
 
     def directories(self):
@@ -299,6 +298,9 @@ class PluginManager(object):
 
     def loadDefaultPlugins(self):
         return self._loadDefaultPlugins
+        
+    def getPluginLocationManager(self):
+        return self._pluginLocationManager
 
     def setLoadDefaultPlugins(self, loadDefaultPlugins):
         '''
@@ -349,7 +351,11 @@ class PluginManager(object):
             except Exception:
                 package = importlib.reload(sys.modules['mapclientplugins'])
         
-        self._missingDependencies = []
+        self._import_errors = []
+        self._type_errors = []
+        self._syntax_errors = []
+        self._tab_errors = []
+
         for _, modname, ispkg in pkgutil.iter_modules(package.__path__):
             if ispkg:                
                 try:
@@ -361,8 +367,18 @@ class PluginManager(object):
                         self._pluginLocationManager.addLoadedPluginInformation(modname, module.__stepname__, module.__author__, module.__version__, module.__location__)
                 except Exception as e:
                     
+                    from mapclient.mountpoints.workflowstep import removeWorkflowStep
+                    # call remove partially loaded plugin manually method
+                    removeWorkflowStep(modname)
+                    
                     if type(e) == ImportError:
-                        self._missingDependencies += [modname]
+                        self._import_errors += [modname]
+                    elif type(e) == TypeError:
+                        self._type_errors += [modname]
+                    elif type(e) == SyntaxError:
+                        self._syntax_errors += [modname]
+                    elif type(e) == TabError:
+                        self._tab_errors += [modname]
                         
                     if '\n' in str(e):
                         e = str(e).split('\n')
@@ -374,10 +390,13 @@ class PluginManager(object):
                     else:
                         logger.warn('Plugin \'' + modname + '\' not loaded')
                         logger.warn('Reason: {0}'.format(e))
+    
+    def getPluginErrors(self):
+        return {'ImportError':self._import_errors, 'TypeError':self._type_errors, 'SyntaxError':self._syntax_errors, 'TabError':self._tab_errors}
             
-    def showMissingDependencies(self, missing_dependencies):
-        from mapclient.widgets.missingdependencies import MissingPluginDependecies
-        dlg = MissingPluginDependecies(missing_dependencies)
+    def showPluginErrorsDialog(self):
+        from mapclient.widgets.pluginerrors import PluginErrors
+        dlg = PluginErrors(self.getPluginErrors())
         dlg.setModal(True)
         dlg.fillList()
         dlg.exec_()

@@ -272,10 +272,12 @@ class WorkflowWidget(QtGui.QWidget):
         wf.endGroup()
         
         required_plugins = {}
+        locationManager = self._mainWindow.model().pluginManager().getPluginLocationManager()
+        pluginDatabase = locationManager.getPluginDatabase()
         for plugin in pluginDict.keys():
-            if not (plugin in self._pluginLocationManager._plugin_database.keys() and \
-                pluginDict[plugin]['author'] == self._pluginLocationManager._plugin_database[plugin]['author'] and \
-                pluginDict[plugin]['version'] == self._pluginLocationManager._plugin_database[plugin]['version']):
+            if not (plugin in pluginDatabase.keys() and \
+                pluginDict[plugin]['author'] == pluginDatabase[plugin]['author'] and \
+                pluginDict[plugin]['version'] == pluginDatabase[plugin]['version']):
                 required_plugins[plugin] = pluginDict[plugin]
         return required_plugins
         
@@ -285,7 +287,7 @@ class WorkflowWidget(QtGui.QWidget):
         dlg.fillTable(plugins)
         dlg.setModal(True)
         if dlg.exec_():
-            directory = QtGui.QFileDialog.getExistingDirectory(caption='Select Plugin Directory', dir='', options=QtGui.QFileDialog.ShowDirsOnly | QtGui.QFileDialog.DontResolveSymlinks)
+            directory = QtGui.QFileDialog.getExistingDirectory(caption='Select Plugin Directory', dir = '', options=QtGui.QFileDialog.ShowDirsOnly | QtGui.QFileDialog.DontResolveSymlinks)
             if directory != '':
                 self.downloadPlugins(plugins, directory)
             
@@ -323,9 +325,14 @@ class WorkflowWidget(QtGui.QWidget):
         wf = workflow._getWorkflowConfiguration(workflowDir)
         plugins = self.checkRequiredPlugins(wf)
         if plugins:
+            QtGui.QApplication.restoreOverrideCursor()
             self.showDownloadableContent(plugins)
         logger.info('Analyze first before attempting load ...')
         try:
+            pm = self._mainWindow.model().pluginManager()
+            pm.load()
+            self._mainWindow.showPluginErrors()
+            self.updateStepTree()
             m = self._mainWindow.model().workflowManager()
             m.load(workflowDir)
             m.setPreviousLocation(workflowDir)

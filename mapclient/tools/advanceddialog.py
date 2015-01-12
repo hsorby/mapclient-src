@@ -122,5 +122,3 @@ class AdvancedDialog(QDialog):
             for plugin in unsuccessful_updates:
                 warning_string += '\n\t\t\t' + plugin
             ret = QMessageBox.warning(self, 'Warning', warning_string + '\n\nPlease inspect the program logs for more information.  \t', QMessageBox.Ok)
-        
-        ret = QMessageBox.information(self, 'Restart Application', 'In order for the updated plugins to be loaded correctly\nMAP Client must be restarted.\n\nPlease save any changes and restart MAP Client.', QMessageBox.Ok)

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MissingDependencies</class>
- <widget class="QDialog" name="MissingDependencies">
+ <class>PluginErrors</class>
+ <widget class="QDialog" name="PluginErrors">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dependencies</string>
+   <string>Plugin Errors</string>
   </property>
   <property name="windowIcon">
    <iconset resource="resources.qrc">
@@ -21,7 +21,7 @@
    <item>
     <widget class="QLabel" name="label">
      <property name="text">
-      <string>The following plugins require additional plackages that are not installed at this time. For each plugin please examine its README.md file and obtain the listed dependencies.</string>
+      <string/>
      </property>
      <property name="wordWrap">
       <bool>true</bool>
@@ -30,6 +30,9 @@
    </item>
    <item>
     <widget class="QListWidget" name="listWidget">
+     <property name="editTriggers">
+      <set>QAbstractItemView::NoEditTriggers</set>
+     </property>
      <property name="textElideMode">
       <enum>Qt::ElideMiddle</enum>
      </property>
@@ -68,7 +71,7 @@
   <connection>
    <sender>pushButton</sender>
    <signal>clicked()</signal>
-   <receiver>MissingDependencies</receiver>
+   <receiver>PluginErrors</receiver>
    <slot>close()</slot>
    <hints>
     <hint type="sourcelabel">

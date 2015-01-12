@@ -52,6 +52,7 @@ class PluginManagerDialog(QtGui.QDialog):
         dlg = AdvancedDialog()
         dlg.setModal(True)
         dlg.exec_()
+        self.reloadPlugins()
 
     def _directorySelectionChanged(self):
         self._ui.removeButton.setEnabled(len(self._ui.directoryListing.selectedItems()) > 0)

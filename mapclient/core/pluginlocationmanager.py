@@ -52,3 +52,6 @@ class PluginLocationManager:
         plugin_dict['version'] = plugin_version
         plugin_dict['location'] = plugin_location
         self._plugin_database[step_name] = plugin_dict
+        
+    def getPluginDatabase(self):
+        return self._plugin_database

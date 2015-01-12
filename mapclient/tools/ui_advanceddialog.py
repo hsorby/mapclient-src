@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'qt/advanceddialog.ui'
 #
-# Created: Fri Jan  9 10:23:11 2015
+# Created: Mon Jan 12 10:13:06 2015
 #      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -40,6 +40,7 @@ class Ui_AdvancedDialog(object):
         self.horizontalLayout.addWidget(self.analyseButton)
         self.verticalLayout_2.addLayout(self.horizontalLayout)
         self.listWidget = QtGui.QListWidget(self.tab)
+        self.listWidget.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
         self.listWidget.setObjectName("listWidget")
         self.verticalLayout_2.addWidget(self.listWidget)
         self.horizontalLayout_2 = QtGui.QHBoxLayout()

@@ -42,6 +42,7 @@ class PluginProgress(QtGui.QDialog):
         self._totalBytes = 0
         self._download_strings = ['Downloading %d of %d plugins...', 'Extracting %d of %d plugins...']
         self._ui.progressBar.setMaximum(len(plugins)*50)
+        self._ui.progressBar.setValue(0)
         
     def _makeConnections(self):
         self._ui.cancelDownload.clicked.connect(self.downloadCancelled)
@@ -62,12 +63,11 @@ class PluginProgress(QtGui.QDialog):
             for part in self._fileNames[plugin]:
                 file = file + part
             self._fileNames[plugin] = file
-            
+
             rq = requests.get(self._plugins[plugin]['location'])
             if not rq.ok:
-                ret = QtGui.QMessageBox.critical(self, 'Error', '\n There was a problem downloading the following plugin:  ' + plugin + '\n\n Please check your internet connection.\t', QMessageBox.Ok)            
-                
-            self._totalBytes += int(rq.headers['content-length'])
+                ret = QtGui.QMessageBox.critical(self, 'Error', '\n There was a problem downloading the following plugin:  ' + plugin + '\n\n Please check your internet connection.\t', QMessageBox.Ok)   
+            self._totalBytes += int(rq.headers['Content-length'])
             with open(os.path.join(self._directory, self._fileNames[plugin] + '.zip'), "wb") as zFile:
                 for chunk in rq.iter_content(1):
                     zFile.write(chunk)
