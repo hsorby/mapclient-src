@@ -202,7 +202,6 @@ class PluginUpdater:
             except Exception as e:
                 if e.exc_type_name == 'SyntaxError':
                     return True
-                    break
         return False                
         
     def checkTabbedIndentation(self, directory):
@@ -222,6 +221,7 @@ class PluginUpdater:
             fail_update = self.analyseModuleIndentation(directory)
             if fail_update:
                 return True
+        return False
             
     def analyseModuleIndentation(self, directory):
         with open(directory, 'r') as module:

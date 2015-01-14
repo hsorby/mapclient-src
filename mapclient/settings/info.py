@@ -56,7 +56,7 @@ JR = {'name': 'Jonathan Ritchie', 'email': 'jrit927@aucklanduni.ac.nz'}
 CREDITS = {
            'programming'  : [HS, TY, JR],
            'artwork'      : [JT],
-           'documentation': [HS]
+           'documentation': [HS, JR]
            }
 
 ABOUT = {
