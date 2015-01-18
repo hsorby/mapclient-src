@@ -34,6 +34,8 @@ if sys.version_info < (3, 4):
     import imp
 else:
     import importlib
+    
+from mapclient.core.utils import convertExceptionToMessage
 
 logger = logging.getLogger(__name__)
 
@@ -352,15 +354,9 @@ class PluginManager(object):
                     if hasattr(module, '__version__') and hasattr(module, '__author__'):
                         logger.info('Loaded plugin \'' + modname + '\' version [' + module.__version__ + '] by ' + module.__author__)
                 except Exception as e:
-                    if '\n' in e:
-                        e = str(e).split('\n')
-                    else:
-                        e = list(e)
-                    e_new = ''
-                    for i in range(len(e)):
-                        e_new += e[i] + '  '
+                    message = convertExceptionToMessage(e)
                     logger.warn('Plugin \'' + modname + '\' not loaded')
-                    logger.warn('Reason: {0}'.format(e_new))
+                    logger.warn('Reason: {0}'.format(message))
 
     def readSettings(self, settings):
         self._directories = []
