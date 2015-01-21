@@ -17,7 +17,7 @@ This file is part of MAP Client. (http://launchpad.net/mapclient)
     You should have received a copy of the GNU General Public License
     along with MAP Client.  If not, see <http://www.gnu.org/licenses/>..
 '''
-
+import sys
 from mapclient.core import pluginframework
 
 class WorkflowStepPort(object):
@@ -196,4 +196,18 @@ def workflowStepFactory(step_name, location):
 
     raise ValueError('Failed to find/create a step named: ' + step_name)
 
+def removeWorkflowStep(step_module):
+    '''
+    takes a module name (as a string) and removes all references
+     - from sys.modules
+     - from WorkflowStepMountPoint class
+    '''
+    for key in list(sys.modules.keys()):
+        if step_module in key:
+            del sys.modules[key]
 
+
+    for cls in WorkflowStepMountPoint.plugins[:]:
+        if cls and step_module in cls.__module__:
+            index = WorkflowStepMountPoint.plugins.index(cls)
+            WorkflowStepMountPoint.plugins.pop(index)

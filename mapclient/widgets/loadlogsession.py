@@ -17,7 +17,7 @@ This file is part of MAP Client. (http://launchpad.net/mapclient)
     You should have received a copy of the GNU General Public License
     along with MAP Client.  If not, see <http://www.gnu.org/licenses/>..
 '''
-import os, sys
+import os
 from PySide.QtGui import QDialog, QFileDialog, QMessageBox
 
 from mapclient.widgets.ui_loadlogsession import Ui_LoadWindow
@@ -43,7 +43,7 @@ class LoadLogSession(QDialog):
         
     def findLogSession(self):
         previousSession = QFileDialog.getOpenFileName(self, dir = os.path.dirname(initialiseLogLocation()), \
-            filter='Log Files (*.log.* *.log)', caption='Select Previous Session',  options=QFileDialog.DontResolveSymlinks | QFileDialog.ReadOnly)
+            filter='Log Files (logging_record.log.* logging_record.log)', caption='Select Previous Session',  options=QFileDialog.DontResolveSymlinks | QFileDialog.ReadOnly)
         if len(previousSession) > 0 and len(self._ui.lineEdit.text()) == 0:
             self._ui.lineEdit.insert(previousSession[0])
         else:

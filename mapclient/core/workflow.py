@@ -25,6 +25,7 @@ from mapclient.settings import info
 from mapclient.core.workflowscene import WorkflowScene
 from mapclient.core.workflowerror import WorkflowError
 from mapclient.core.workflowrdf import serializeWorkflowAnnotation
+from mapclient.core.pluginlocationmanager import PluginLocationManager
 
 _PREVIOUS_LOCATION_STRING = 'previousLocation'
 
@@ -59,7 +60,8 @@ class WorkflowManager(object):
         self._currentStateIndex = 0
 
         self._title = None
-
+        
+        self._pluginLocationManager = PluginLocationManager()
         self._scene = WorkflowScene(self)
 
     def title(self):
@@ -178,6 +180,7 @@ class WorkflowManager(object):
         if 'version' not in wf.allKeys():
             wf.setValue('version', info.VERSION_STRING)
         self._scene.saveState(wf)
+        self._pluginLocationManager.saveState(wf, self._scene)
         self._saveStateIndex = self._currentStateIndex
         af = _getWorkflowMetaAbsoluteFilename(self._location)
         f = open(af, 'w')

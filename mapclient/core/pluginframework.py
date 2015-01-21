@@ -29,8 +29,9 @@ import site
 import sys
 import pkgutil
 from importlib import import_module
+from mapclient.core.pluginlocationmanager import PluginLocationManager
 
-if sys.version_info < (3, 4):
+if sys.version_info < (3, 0):
     import imp
 else:
     import importlib
@@ -279,6 +280,7 @@ class PluginManager(object):
     def __init__(self):
         self._directories = []
         self._loadDefaultPlugins = True
+        self._pluginLocationManager = PluginLocationManager()
 
     def directories(self):
         return self._directories
@@ -298,6 +300,9 @@ class PluginManager(object):
 
     def loadDefaultPlugins(self):
         return self._loadDefaultPlugins
+        
+    def getPluginLocationManager(self):
+        return self._pluginLocationManager
 
     def setLoadDefaultPlugins(self, loadDefaultPlugins):
         '''
@@ -347,16 +352,48 @@ class PluginManager(object):
                 package = imp.reload(sys.modules['mapclientplugins'])
             except Exception:
                 package = importlib.reload(sys.modules['mapclientplugins'])
+        
+        self._import_errors = []
+        self._type_errors = []
+        self._syntax_errors = []
+        self._tab_errors = []
+
         for _, modname, ispkg in pkgutil.iter_modules(package.__path__):
-            if ispkg:
+            if ispkg:                
                 try:
                     module = import_module('mapclientplugins.' + modname)
                     if hasattr(module, '__version__') and hasattr(module, '__author__'):
                         logger.info('Loaded plugin \'' + modname + '\' version [' + module.__version__ + '] by ' + module.__author__)
+                    if hasattr(module, '__location__') and hasattr(module, '__stepname__'):
+                        logger.info('Plugin \'' + modname + '\' available from: ' + module.__location__)
+                        self._pluginLocationManager.addLoadedPluginInformation(modname, module.__stepname__, module.__author__, module.__version__, module.__location__)
                 except Exception as e:
+                    from mapclient.mountpoints.workflowstep import removeWorkflowStep
+                    # call remove partially loaded plugin manually method
+                    removeWorkflowStep(modname)
+                    
+                    if type(e) == ImportError:
+                        self._import_errors += [modname]
+                    elif type(e) == TypeError:
+                        self._type_errors += [modname]
+                    elif type(e) == SyntaxError:
+                        self._syntax_errors += [modname]
+                    elif type(e) == TabError:
+                        self._tab_errors += [modname]
+                        
                     message = convertExceptionToMessage(e)
                     logger.warn('Plugin \'' + modname + '\' not loaded')
                     logger.warn('Reason: {0}'.format(message))
+    
+    def getPluginErrors(self):
+        return {'ImportError':self._import_errors, 'TypeError':self._type_errors, 'SyntaxError':self._syntax_errors, 'TabError':self._tab_errors}
+            
+    def showPluginErrorsDialog(self):
+        from mapclient.widgets.pluginerrors import PluginErrors
+        dlg = PluginErrors(self.getPluginErrors())
+        dlg.setModal(True)
+        dlg.fillList()
+        dlg.exec_()
 
     def readSettings(self, settings):
         self._directories = []

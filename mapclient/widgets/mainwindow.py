@@ -245,6 +245,7 @@ class MainWindow(QtGui.QMainWindow):
             if directories_modified or defaults_modified:
                 pm.load()
                 self._workflowWidget.updateStepTree()
+            self.showPluginErrors()
 
         self._pluginManagerDlg = None
 
@@ -285,3 +286,9 @@ class MainWindow(QtGui.QMainWindow):
         dlg.setModal(True)
         dlg.exec_()
 
+    def showPluginErrors(self):
+        plugin_errors = self._model.pluginManager().getPluginErrors()
+        for error in plugin_errors:
+            if plugin_errors[error]:
+                self._model.pluginManager().showPluginErrorsDialog()
+                break

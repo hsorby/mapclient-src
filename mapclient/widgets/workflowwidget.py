@@ -17,10 +17,8 @@ This file is part of MAP Client. (http://launchpad.net/mapclient)
     You should have received a copy of the GNU General Public License
     along with MAP Client.  If not, see <http://www.gnu.org/licenses/>..
 '''
-import os
-import logging
-
-from PySide import QtGui
+import os, logging
+from PySide import QtCore, QtGui
 
 from requests.exceptions import HTTPError
 from mapclient.exceptions import ClientRuntimeError
@@ -34,11 +32,10 @@ from mapclient.widgets.utils import handle_runtime_error
 from mapclient.widgets.ui_workflowwidget import Ui_WorkflowWidget
 from mapclient.mountpoints.workflowstep import WorkflowStepMountPoint
 from mapclient.widgets.workflowgraphicsscene import WorkflowGraphicsScene
-from mapclient.core.workflow import WorkflowError
+from mapclient.core import workflow
 from mapclient.tools.pmr.pmrtool import PMRTool
 from mapclient.tools.pmr.pmrsearchdialog import PMRSearchDialog
 from mapclient.tools.pmr.pmrhgcommitdialog import PMRHgCommitDialog
-import shutil
 from mapclient.widgets.importworkflowdialog import ImportWorkflowDialog
 
 logger = logging.getLogger(__name__)
@@ -59,7 +56,7 @@ class WorkflowWidget(QtGui.QWidget):
 
         self._undoStack = QtGui.QUndoStack(self)
         self._undoStack.indexChanged.connect(self.undoStackIndexChanged)
-
+        
         self._workflowManager = self._mainWindow.model().workflowManager()
         self._graphicsScene = WorkflowGraphicsScene(self)
         self._ui.graphicsView.setScene(self._graphicsScene)
@@ -249,17 +246,75 @@ class WorkflowWidget(QtGui.QWidget):
             )
         )
         if len(workflowDir) > 0:
+            self.performWorkflowChecks(workflowDir)
             try:
                 m.load(workflowDir)
                 m.setPreviousLocation(workflowDir)
                 self._ui.graphicsView.setLocation(workflowDir)
                 self._graphicsScene.updateModel()
                 self._updateUi()
-            except (ValueError, WorkflowError) as e:
+            except (ValueError, workflow.WorkflowError) as e:
                 self.close()
                 QtGui.QMessageBox.critical(self, 'Error Caught',
                     'Invalid Workflow.  ' + str(e))
+                    
+    def checkRequiredPlugins(self, wf):
+        pluginDict = {}
+        wf.beginGroup('required_plugins')
+        pluginCount = wf.beginReadArray('plugin')
+        for i in range(pluginCount):
+            wf.setArrayIndex(i)
+            pluginDict[wf.value('name')] = {
+                'author':wf.value('author'),
+                'version':wf.value('version'),
+                'location':wf.value('location')
+            }
+        wf.endArray()
+        wf.endGroup()
+        
+        required_plugins = {}
+        locationManager = self._mainWindow.model().pluginManager().getPluginLocationManager()
+        pluginDatabase = locationManager.getPluginDatabase()
+        for plugin in pluginDict.keys():
+            if not (plugin in pluginDatabase.keys() and \
+                pluginDict[plugin]['author'] == pluginDatabase[plugin]['author'] and \
+                pluginDict[plugin]['version'] == pluginDatabase[plugin]['version']):
+                required_plugins[plugin] = pluginDict[plugin]
+        return required_plugins
+        
+    def showDownloadableContent(self, plugins):
+        from mapclient.widgets.plugindownloader import PluginDownloader
+        dlg = PluginDownloader()
+        dlg.fillTable(plugins)
+        dlg.setModal(True)
+        if dlg.exec_():
+            directory = QtGui.QFileDialog.getExistingDirectory(caption='Select Plugin Directory', dir = '', options=QtGui.QFileDialog.ShowDirsOnly | QtGui.QFileDialog.DontResolveSymlinks)
+            if directory != '':
+                pm = self._mainWindow.model().pluginManager()
+                pluginDirs = pm.directories()
+                if directory not in pluginDirs:
+                    pluginDirs.append(directory)
+                    pm.setDirectories(pluginDirs)
+                self.downloadPlugins(plugins, directory)
+            
+    def downloadPlugins(self, plugins, directory):
+        from mapclient.widgets.pluginprogress import PluginProgress
+        self.dlg = PluginProgress(plugins, directory)
+        self.dlg.show()        
+        self.dlg.run()
 
+    def performWorkflowChecks(self, workflowDir):
+        wf = workflow._getWorkflowConfiguration(workflowDir)
+        plugins = self.checkRequiredPlugins(wf)
+        if plugins:
+            QtGui.QApplication.restoreOverrideCursor()
+            self.showDownloadableContent(plugins)
+        
+        pm = self._mainWindow.model().pluginManager()
+        pm.load()
+        self._mainWindow.showPluginErrors()
+        self.updateStepTree()
+        
     def importFromPMR(self):
         m = self._mainWindow.model().workflowManager()
         dlg = ImportWorkflowDialog(m.previousLocation(), self._mainWindow)
@@ -269,11 +324,11 @@ class WorkflowWidget(QtGui.QWidget):
             if os.path.exists(destination_dir) and workspace_url:
                 try:
                     self._importFromPMR(workspace_url, destination_dir)
-                except (ValueError, WorkflowError) as e:
+                except (ValueError, workflow.WorkflowError) as e:
                     QtGui.QMessageBox.critical(self, 'Error Caught', 'Invalid Workflow.  ' + str(e))
             else:
                 QtGui.QMessageBox.critical(self, 'Error Caught', 'Invalid Import Settings.  Either the workspace url (%s) was not set' \
-                                           'or the destination directory (%s) does not exist. ' % (workspace_url, destination_dir))
+                                           ' or the destination directory (%s) does not exist. ' % (workspace_url, destination_dir))
 
     @handle_runtime_error
     @set_wait_cursor
@@ -284,7 +339,8 @@ class WorkflowWidget(QtGui.QWidget):
             remote_workspace_url=workspace_url,
             local_workspace_dir=workflowDir,
         )
-
+        
+        self.performWorkflowChecks(workflowDir)
         logger.info('Analyze first before attempting load ...')
         try:
             m = self._mainWindow.model().workflowManager()

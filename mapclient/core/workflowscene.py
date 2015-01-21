@@ -267,7 +267,7 @@ class WorkflowScene(object):
             nodeIndex += 1
         ws.endArray()
         ws.endGroup()
-
+        
     def loadState(self, ws):
         self.clear()
         location = self._manager.location()

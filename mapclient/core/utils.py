@@ -21,6 +21,7 @@ This file is part of MAP Client. (http://launchpad.net/mapclient)
 def convertExceptionToMessage(e):
     string_e = str(e)
     if '\n' in string_e:
+        message = ''
         e = string_e.split('\n')
         for i in range(len(e)):
             message += e[i] + '  '
