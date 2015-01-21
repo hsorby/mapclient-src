@@ -45,6 +45,14 @@ class PluginManagerDialog(QtGui.QDialog):
         self._ui.directoryListing.itemSelectionChanged.connect(self._directorySelectionChanged)
         self._ui.removeButton.clicked.connect(self._removeButtonClicked)
         self._ui.reloadButton.clicked.connect(self.reloadPlugins)
+        self._ui.advancedButton.clicked.connect(self.showAdvancedDialog)
+        
+    def showAdvancedDialog(self):
+        from mapclient.tools.advanceddialog import AdvancedDialog
+        dlg = AdvancedDialog()
+        dlg.setModal(True)
+        dlg.exec_()
+        self.reloadPlugins()
 
     def _directorySelectionChanged(self):
         self._ui.removeButton.setEnabled(len(self._ui.directoryListing.selectedItems()) > 0)

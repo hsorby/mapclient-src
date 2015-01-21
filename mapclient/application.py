@@ -19,6 +19,7 @@ This file is part of MAP Client. (http://launchpad.net/mapclient)
     along with MAP Client.  If not, see <http://www.gnu.org/licenses/>..
 '''
 from __future__ import absolute_import
+import ctypes
 
 import os, sys, locale
 import logging
@@ -41,9 +42,9 @@ def initialiseLogLocation():
     log_filename = 'logging_record.log'
     platform = sys.platform
     if platform == 'linux2':
-        logging_file_location = os.path.join(os.getenv('HOME'), '.conf', info.ORGANISATION_NAME, info.APPLICATION_NAME, log_filename)       
+        logging_file_location = os.path.join(os.getenv('HOME'), '.conf', info.ORGANISATION_NAME, info.APPLICATION_NAME, 'logs', log_filename)       
     elif platform == 'win32':
-        logging_file_location = os.path.join(os.getenv('APPDATA'), info.ORGANISATION_NAME, info.APPLICATION_NAME, log_filename)
+        logging_file_location = os.path.join(os.getenv('APPDATA'), info.ORGANISATION_NAME, info.APPLICATION_NAME, 'logs', log_filename)
     elif platform == 'darwin':
         sub_dir = 'Library\\Preferences\\com.' + info.ORGANISATION_NAME + '.' + info.APPLICATION_NAME + '.' + log_filename
         logging_file_location = os.path.join(os.getenv('HOME'), sub_dir)
@@ -91,6 +92,9 @@ def winmain():
     '''
     Initialise common settings and check the operating environment before starting the application.
     '''
+    if sys.platform == 'win32':
+        myappid = 'MusculoSkeletal.MAPClient' # arbitrary string
+        ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
     
     log_path = initialiseLogLocation()
     initialiseLogger(log_path)
@@ -114,7 +118,9 @@ def winmain():
     from mapclient.widgets.mainwindow import MainWindow
     window = MainWindow(model)
     window.show()
-
+    
+    window.showPluginErrors()
+    
     return app.exec_()
 
 class ConsumeOutput(object):

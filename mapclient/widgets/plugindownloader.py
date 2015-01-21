@@ -19,37 +19,24 @@ This file is part of MAP Client. (http://launchpad.net/mapclient)
 '''
 from PySide.QtGui import QDialog, QTableWidgetItem
 
-from mapclient.widgets.ui_logdetails import Ui_LogDetails
+from mapclient.widgets.ui_plugindownloader import Ui_pluginDownloader
 
-class LogDetails(QDialog):
+class PluginDownloader(QDialog):
     '''
-    Load details dialog to present the user with more detailed information about an individual recorded log.
+    Dialog showing the plugins required to run the desired workflow from PMR.
     '''
     
     def __init__(self, parent=None):
         '''
         Constructor
-        '''        
+        '''
         QDialog.__init__(self, parent)
-        self._ui = Ui_LogDetails()
+        self._ui = Ui_pluginDownloader()
         self._ui.setupUi(self)
         
-    def fillTable(self, information, time, current_log_file, parent=None):
-        log_file = open(current_log_file, 'r')
-        log_data = log_file.read()
-        log_file.close()        
-        logs = log_data.split('\n')
-        logs = logs[:-1]
-        self._ui.detailedTable.setRowCount(5)
-        self._ui.detailedTable.setColumnCount(1)
-        
-        selectedLog = logs[0].split(' - ')
-        for log in logs:
-            log = log.split(' - ')
-            if log[1] == time and log[4] == information:
-                selectedLog = log
-                
-        row_number = 0
-        for information in selectedLog:
-            self._ui.detailedTable.setItem(row_number, 0, QTableWidgetItem(selectedLog[row_number]))
-            row_number += 1
+    def fillTable(self, plugin_information):
+        for plugin in plugin_information.keys():
+            display_string = plugin + ' - ' + 'Author: ' + plugin_information[plugin]['author'] + ' | ' + \
+                                'Version: ' + plugin_information[plugin]['version'] + ' | ' + 'Location: ' + \
+                                plugin_information[plugin]['location']
+            self._ui.requiredPlugins.addItem(display_string)

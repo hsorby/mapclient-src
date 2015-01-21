@@ -17,11 +17,10 @@ This file is part of MAP Client. (http://launchpad.net/mapclient)
     You should have received a copy of the GNU General Public License
     along with MAP Client.  If not, see <http://www.gnu.org/licenses/>..
 '''
-import sys
-
-from PySide.QtGui import QDialog, QTableWidget, QTableWidgetItem
+from PySide.QtGui import QDialog, QTableWidgetItem
 from mapclient.widgets.ui_loginformation import Ui_LogInformation
 from mapclient.application import initialiseLogLocation
+
 
 class LogInformation(QDialog):
     '''

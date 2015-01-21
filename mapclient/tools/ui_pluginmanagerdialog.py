@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'qt/pluginmanagerdialog.ui'
 #
-# Created: Thu Oct 10 15:24:46 2013
-#      by: pyside-uic 0.2.14 running on PySide 1.1.2
+# Created: Fri Dec 12 13:40:36 2014
+#      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -52,11 +52,20 @@ class Ui_PluginManagerDialog(object):
         self.horizontalLayout.addLayout(self.verticalLayout_2)
         self.verticalLayout_4.addLayout(self.horizontalLayout)
         self.verticalLayout.addWidget(self.groupBox)
+        self.horizontalLayout_2 = QtGui.QHBoxLayout()
+        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
+        self.advancedButton = QtGui.QPushButton(PluginManagerDialog)
+        self.advancedButton.setMinimumSize(QtCore.QSize(90, 0))
+        self.advancedButton.setObjectName("advancedButton")
+        self.horizontalLayout_2.addWidget(self.advancedButton)
+        spacerItem1 = QtGui.QSpacerItem(80, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout_2.addItem(spacerItem1)
         self.buttonBox = QtGui.QDialogButtonBox(PluginManagerDialog)
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
         self.buttonBox.setStandardButtons(QtGui.QDialogButtonBox.Cancel|QtGui.QDialogButtonBox.Ok)
         self.buttonBox.setObjectName("buttonBox")
-        self.verticalLayout.addWidget(self.buttonBox)
+        self.horizontalLayout_2.addWidget(self.buttonBox)
+        self.verticalLayout.addLayout(self.horizontalLayout_2)
 
         self.retranslateUi(PluginManagerDialog)
         QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL("accepted()"), PluginManagerDialog.accept)
@@ -72,4 +81,5 @@ class Ui_PluginManagerDialog(object):
         self.removeButton.setText(QtGui.QApplication.translate("PluginManagerDialog", "Remove Directory", None, QtGui.QApplication.UnicodeUTF8))
         self.reloadButton.setToolTip(QtGui.QApplication.translate("PluginManagerDialog", "Reload the plugins from the current plugin directories", None, QtGui.QApplication.UnicodeUTF8))
         self.reloadButton.setText(QtGui.QApplication.translate("PluginManagerDialog", "Reload", None, QtGui.QApplication.UnicodeUTF8))
+        self.advancedButton.setText(QtGui.QApplication.translate("PluginManagerDialog", "Advanced...", None, QtGui.QApplication.UnicodeUTF8))
 
