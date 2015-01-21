@@ -177,6 +177,8 @@ class WorkflowManager(object):
 
     def save(self):
         wf = _getWorkflowConfiguration(self._location)
+        if 'version' not in wf.allKeys():
+            wf.setValue('version', info.VERSION_STRING)
         self._scene.saveState(wf)
         self._pluginLocationManager.saveState(wf, self._scene)
         self._saveStateIndex = self._currentStateIndex

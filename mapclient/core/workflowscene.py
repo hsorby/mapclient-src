@@ -18,9 +18,13 @@ This file is part of MAP Client. (http://launchpad.net/mapclient)
     along with MAP Client.  If not, see <http://www.gnu.org/licenses/>..
 '''
 from PySide import QtCore
+import logging
 
 from mapclient.mountpoints.workflowstep import workflowStepFactory
 from mapclient.core.workflowerror import WorkflowError
+from mapclient.core.utils import convertExceptionToMessage
+
+logger = logging.getLogger(__name__)
 
 class Item(object):
 
@@ -200,7 +204,12 @@ class WorkflowDependencyGraph(object):
                     dataIn = connection.source()._step.getPortData(connection.sourceIndex())
                     current_node._step.setPortData(connection.destinationIndex(), dataIn)
 
-            current_node._step.execute()
+            try:
+                current_node._step.execute()
+            except Exception as e:
+                log_message = 'Exception caught while executing the workflow: ' + convertExceptionToMessage(e)
+                logger.critical(log_message)
+                self._current = -1
 
 
 class WorkflowScene(object):

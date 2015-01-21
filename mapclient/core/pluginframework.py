@@ -35,6 +35,8 @@ if sys.version_info < (3, 0):
     import imp
 else:
     import importlib
+    
+from mapclient.core.utils import convertExceptionToMessage
 
 logger = logging.getLogger(__name__)
 
@@ -366,7 +368,6 @@ class PluginManager(object):
                         logger.info('Plugin \'' + modname + '\' available from: ' + module.__location__)
                         self._pluginLocationManager.addLoadedPluginInformation(modname, module.__stepname__, module.__author__, module.__version__, module.__location__)
                 except Exception as e:
-                    
                     from mapclient.mountpoints.workflowstep import removeWorkflowStep
                     # call remove partially loaded plugin manually method
                     removeWorkflowStep(modname)
@@ -380,16 +381,9 @@ class PluginManager(object):
                     elif type(e) == TabError:
                         self._tab_errors += [modname]
                         
-                    if '\n' in str(e):
-                        e = str(e).split('\n')
-                        e_new = ''
-                        for i in range(len(e)):
-                            e_new += e[i] + '  '
-                        logger.warn('Plugin \'' + modname + '\' not loaded')
-                        logger.warn('Reason: {0}'.format(e_new))
-                    else:
-                        logger.warn('Plugin \'' + modname + '\' not loaded')
-                        logger.warn('Reason: {0}'.format(e))
+                    message = convertExceptionToMessage(e)
+                    logger.warn('Plugin \'' + modname + '\' not loaded')
+                    logger.warn('Reason: {0}'.format(message))
     
     def getPluginErrors(self):
         return {'ImportError':self._import_errors, 'TypeError':self._type_errors, 'SyntaxError':self._syntax_errors, 'TabError':self._tab_errors}
