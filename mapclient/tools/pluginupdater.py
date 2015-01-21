@@ -108,6 +108,7 @@ class PluginUpdater:
         return self.checkResourcesFileContents(directory)
     
     def updateSyntax(self, plugin, directory):
+        # find 2to3 for the system
         dir_2to3 = os.path.join(sys.exec_prefix, 'tools', 'scripts', '2to3.py')
         file_out = open(initialiseLogLocation()[:-18] + 'syntax_update_report_' + plugin + '.log', 'w')
         try:

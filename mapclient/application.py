@@ -41,7 +41,7 @@ def initialiseLogLocation():
     '''
     log_filename = 'logging_record.log'
     platform = sys.platform
-    if platform == 'linux2':
+    if platform == 'linux2' or platform == 'linux':
         logging_file_location = os.path.join(os.getenv('HOME'), '.conf', info.ORGANISATION_NAME, info.APPLICATION_NAME, 'logs', log_filename)       
     elif platform == 'win32':
         logging_file_location = os.path.join(os.getenv('APPDATA'), info.ORGANISATION_NAME, info.APPLICATION_NAME, 'logs', log_filename)
