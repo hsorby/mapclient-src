@@ -19,7 +19,7 @@ from pmr2.wfctrl.core import CmdWorkspace
 import pmr2.wfctrl.cmd
 
 from mapclient.exceptions import ClientRuntimeError
-from mapclient.settings import info
+from mapclient.settings import general
 
 logger = logging.getLogger(__name__)
 
@@ -121,7 +121,7 @@ class PMRTool(object):
 
     def make_session(self, pmr_info=None):
         if pmr_info is None:
-            pmr_info = info.PMRInfo()
+            pmr_info = general.PMRInfo()
 
         if self.hasAccess():
             kwargs = pmr_info.get_session_kwargs()
@@ -138,18 +138,18 @@ class PMRTool(object):
         return session
 
     def hasAccess(self):
-        pmr_info = info.PMRInfo()
+        pmr_info = general.PMRInfo()
         return pmr_info.has_access()
 
     def deregister(self):
-        pmr_info = info.PMRInfo()
+        pmr_info = general.PMRInfo()
         pmr_info.update_token(None, None)
 
     # also workaround the resigning redirections by manually resolving
     # redirects while using allow_redirects=False when making all requests
 
     def _search(self, text, search_type):
-        pmr_info = info.PMRInfo()
+        pmr_info = general.PMRInfo()
         session = self.make_session()
 
         if search_type == ontological_search_string:
@@ -244,7 +244,7 @@ class PMRTool(object):
         return self._client.authorizationUrl(key)
 
     def getDashboard(self):
-        pmr_info = info.PMRInfo()
+        pmr_info = general.PMRInfo()
         session = self.make_session(pmr_info)
         target = '/'.join([pmr_info.host, endpoints['']['dashboard']])
         r = session.get(target)

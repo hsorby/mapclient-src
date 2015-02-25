@@ -19,7 +19,7 @@ This file is part of MAP Client. (http://launchpad.net/mapclient)
 '''
 from PySide.QtGui import QDialog, QTableWidgetItem
 from mapclient.widgets.ui_loginformation import Ui_LogInformation
-from mapclient.application import initialiseLogLocation
+from mapclient.settings.general import getLogLocation
 
 
 class LogInformation(QDialog):
@@ -27,7 +27,7 @@ class LogInformation(QDialog):
     Log record dialog to present the user with the log information recorded by the program.
     '''
 
-    current_log_file = initialiseLogLocation()
+    current_log_file = getLogLocation()
     
     def __init__(self, parent=None):
         '''
@@ -39,7 +39,7 @@ class LogInformation(QDialog):
         self._makeConnections()
         
     def fillTable(self, parent=None):
-        log_file = open(initialiseLogLocation(), 'r')
+        log_file = open(getLogLocation(), 'r')
         log_data = log_file.read()
         log_file.close()        
         logs = log_data.split('\n')

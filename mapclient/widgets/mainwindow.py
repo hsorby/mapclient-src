@@ -181,7 +181,13 @@ class MainWindow(QtGui.QMainWindow):
         dlg.exec_()
         
     def showOptionsDialog(self):
-        print 'showing options dialog'
+        from mapclient.widgets.dialogs.optionsdialog import OptionsDialog
+        
+        options = {}
+        dlg = OptionsDialog(self)
+        dlg.load(options)
+        if dlg.exec_() == QtGui.QDialog.Accepted:
+            options = dlg.save()
         
     def setCurrentUndoRedoStack(self, stack):
         current_stack = self._model.undoManager().currentStack()

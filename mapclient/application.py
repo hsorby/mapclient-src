@@ -30,30 +30,13 @@ from logging import handlers
 # workaround.
 if __package__:
     from .settings import info
+    from .settings.general import getLogLocation
 else:
     from mapclient.settings import info
+    from mapclient.settings.general import getLogLocation
     
 logger = logging.getLogger('mapclient.application')
 
-def initialiseLogLocation():
-    '''
-    Set up location where log files will be stored (platform dependent).
-    '''
-    log_filename = 'logging_record.log'
-    platform = sys.platform
-    if platform == 'linux2' or platform == 'linux':
-        logging_file_location = os.path.join(os.getenv('HOME'), '.config', info.ORGANISATION_NAME, info.APPLICATION_NAME, 'logs', log_filename)       
-    elif platform == 'win32':
-        logging_file_location = os.path.join(os.getenv('APPDATA'), info.ORGANISATION_NAME, info.APPLICATION_NAME, 'logs', log_filename)
-    elif platform == 'darwin':
-        sub_dir = 'Library\\Preferences\\com.' + info.ORGANISATION_NAME + '.' + info.APPLICATION_NAME + '.' + log_filename
-        logging_file_location = os.path.join(os.getenv('HOME'), sub_dir)
-    
-    log_file_directory = os.path.dirname(logging_file_location)
-    if not os.path.exists(log_file_directory):
-        os.makedirs(log_file_directory)
-    return logging_file_location
-    
 def initialiseLogger(log_path):
     '''
     Initialise logger settings and information formatting
@@ -96,9 +79,6 @@ def winmain():
         myappid = 'MusculoSkeletal.MAPClient' # arbitrary string
         ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
     
-    log_path = initialiseLogLocation()
-    initialiseLogger(log_path)
-    progheader()
     # import the locale, and set the locale. This is used for
     # locale-aware number to string formatting
     locale.setlocale(locale.LC_ALL, '')
@@ -107,10 +87,11 @@ def winmain():
     app = QtGui.QApplication(sys.argv)
 
     # Set the default organisation name and application name used to store application settings
-    app.setOrganizationDomain(info.ORGANISATION_DOMAIN)
-    app.setOrganizationName(info.ORGANISATION_NAME)
-    app.setApplicationName(info.APPLICATION_NAME)
-    app.setApplicationVersion(info.ABOUT['version'])
+    info.setApplicationsSettings(app)
+
+    log_path = getLogLocation()
+    initialiseLogger(log_path)
+    progheader()
 
     from mapclient.core.mainapplication import MainApplication
     model = MainApplication()

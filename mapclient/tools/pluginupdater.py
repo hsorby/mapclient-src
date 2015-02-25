@@ -17,9 +17,8 @@ This file is part of MAP Client. (http://launchpad.net/mapclient)
     You should have received a copy of the GNU General Public License
     along with MAP Client.  If not, see <http://www.gnu.org/licenses/>..
 '''
-import os, sys, pkgutil, logging, subprocess, py_compile, string
-from mapclient.application import initialiseLogLocation
-from importlib import import_module
+import os, sys, logging, subprocess, py_compile, string
+from mapclient.settings.general import getLogDirectory
 
 logger = logging.getLogger(__name__)
 
@@ -136,7 +135,7 @@ class PluginUpdater:
     def updateSyntax(self, plugin, directory):
         # find 2to3 for the system
         dir_2to3 = self.get2to3Dir()
-        file_out = open(initialiseLogLocation()[:-18] + 'syntax_update_report_' + plugin + '.log', 'w')
+        file_out = open(os.path.join(getLogDirectory(), 'syntax_update_report_' + plugin + '.log'), 'w')
         try:
             subprocess.check_call(['python', dir_2to3, '--output-dir=' + directory, '-W', '-v', '-n', '-w', directory], stdout = file_out, stderr = file_out)
             logger.info('Syntax update for \'' + plugin + '\' successful.')
@@ -206,10 +205,10 @@ class PluginUpdater:
     
     def getAllModulesDirsInTree(self, directory):
         moduleDirs = []
-        for dirpath, dirnames, filenames in os.walk(directory):
-            for file in filenames:
-                if '.py' == file[-3:]:
-                    moduleDirs += [os.path.join(dirpath, file)]
+        for dirpath, _, filenames in os.walk(directory):
+            for filename in filenames:
+                if '.py' == filename[-3:]:
+                    moduleDirs += [os.path.join(dirpath, filename)]
         return moduleDirs
     
     def checkModuleSyntax(self, directory):
