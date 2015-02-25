@@ -418,6 +418,7 @@ class PluginManager(object):
         self._directories = []
         settings.beginGroup('Plugins')
         self._loadDefaultPlugins = settings.value('load_defaults', 'true') == 'true'
+        self._doNotShowPluginErrors = settings.value('donot_show_plugin_errors', 'true') == 'true'
         directory_count = settings.beginReadArray('directories')
         for i in range(directory_count):
             settings.setArrayIndex(i)
@@ -455,6 +456,7 @@ class PluginManager(object):
     def writeSettings(self, settings):
         settings.beginGroup('Plugins')
         settings.setValue('load_defaults', self._loadDefaultPlugins)
+        settings.setValue('donot_show_plugin_errors', self._doNotShowPluginErrors)
         settings.beginWriteArray('directories')
         directory_index = 0
         for directory in self._directories:

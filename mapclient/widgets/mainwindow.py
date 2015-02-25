@@ -19,7 +19,7 @@ This file is part of MAP Client. (http://launchpad.net/mapclient)
 '''
 
 import logging
-from PySide import QtGui, QtCore
+from PySide import QtGui
 
 from mapclient.widgets.ui_mainwindow import Ui_MainWindow
 # from mapclient.mountpoints.stackedwidget import StackedWidgetMountPoint
@@ -82,6 +82,8 @@ class MainWindow(QtGui.QMainWindow):
         self.menu_Tools.setObjectName("menu_Tools")
         self.action_LogInformation = QtGui.QAction(self)
         self.action_LogInformation.setObjectName("action_LogInformation")
+        self.action_Options = QtGui.QAction(self)
+        self.action_Options.setObjectName("action_Options")
         self.action_About = QtGui.QAction(self)
         self.action_About.setObjectName("action_About")
         self.action_Quit = QtGui.QAction(self)
@@ -97,6 +99,7 @@ class MainWindow(QtGui.QMainWindow):
         self.menu_Help.addAction(self.action_About)
         self.menu_View.addSeparator()
         self.menu_View.addAction(self.action_LogInformation)
+        self.menu_View.addAction(self.action_Options)
         self.menu_File.addSeparator()
         self.menu_File.addAction(self.action_Quit)
         self.menu_Tools.addAction(self.actionPluginManager)
@@ -126,6 +129,8 @@ class MainWindow(QtGui.QMainWindow):
         self.action_LogInformation.setText(QtGui.QApplication.translate("MainWindow", "Log Information", None, QtGui.QApplication.UnicodeUTF8))
         self.action_LogInformation.setStatusTip(QtGui.QApplication.translate("MainWindow", "Inspect logged program information", None, QtGui.QApplication.UnicodeUTF8))
         self.action_LogInformation.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+I", None, QtGui.QApplication.UnicodeUTF8))
+        self.action_Options.setText(QtGui.QApplication.translate("MainWindow", "Options", None, QtGui.QApplication.UnicodeUTF8))
+        self.action_Options.setStatusTip(QtGui.QApplication.translate("MainWindow", "Change global application options", None, QtGui.QApplication.UnicodeUTF8))
         self.actionPluginManager.setText(QtGui.QApplication.translate("MainWindow", "Plugin &Manager", None, QtGui.QApplication.UnicodeUTF8))
         self.actionPMR.setText(QtGui.QApplication.translate("MainWindow", "&PMR", None, QtGui.QApplication.UnicodeUTF8))
         self.actionAnnotation.setText(QtGui.QApplication.translate("MainWindow", "&Annotation", None, QtGui.QApplication.UnicodeUTF8))
@@ -161,18 +166,22 @@ class MainWindow(QtGui.QMainWindow):
     def _makeConnections(self):
         self.action_Quit.triggered.connect(self.quitApplication)
         self.action_About.triggered.connect(self.about)
-        self.action_LogInformation.triggered.connect(self.displayLogInformation)
-        self.actionPluginManager.triggered.connect(self.pluginManager)
-        self.actionPluginWizard.triggered.connect(self.pluginWizard)
+        self.action_LogInformation.triggered.connect(self.showLogInformationDialog)
+        self.action_Options.triggered.connect(self.showOptionsDialog)
+        self.actionPluginManager.triggered.connect(self.showPluginManagerDialog)
+        self.actionPluginWizard.triggered.connect(self.showPluginWizardDialog)
         self.actionPMR.triggered.connect(self.pmr)
         self.actionAnnotation.triggered.connect(self.annotationTool)
         
-    def displayLogInformation(self):
+    def showLogInformationDialog(self):
         from mapclient.widgets.loginformation import LogInformation
         dlg = LogInformation(self)
         dlg.fillTable(self)
         dlg.setModal(True)
         dlg.exec_()
+        
+    def showOptionsDialog(self):
+        print 'showing options dialog'
         
     def setCurrentUndoRedoStack(self, stack):
         current_stack = self._model.undoManager().currentStack()
@@ -229,7 +238,7 @@ class MainWindow(QtGui.QMainWindow):
         dlg.setModal(True)
         dlg.exec_()
 
-    def pluginManager(self):
+    def showPluginManagerDialog(self):
         from mapclient.tools.pluginmanagerdialog import PluginManagerDialog
         pm = self._model.pluginManager()
         dlg = PluginManagerDialog(self._model.pluginManager()._ignoredPlugins, self._model.pluginManager()._doNotShowPluginErrors, self._model.pluginManager()._resourceFiles, self._model.pluginManager()._updaterSettings)
@@ -264,7 +273,7 @@ class MainWindow(QtGui.QMainWindow):
         pm.load()
         self._workflowWidget.updateStepTree()
 
-    def pluginWizard(self):
+    def showPluginWizardDialog(self):
         from mapclient.tools.pluginwizard.wizarddialog import WizardDialog
         from mapclient.tools.pluginwizard.skeleton import Skeleton
         dlg = WizardDialog(self)

@@ -6,6 +6,7 @@
     <file>images/cross.jpg</file>
     <file>images/icon-app.png</file>
     <file>images/logo.png</file>
+    <file>images/icon-arrow-right.png</file>
   </qresource>
   <qresource prefix="workflow">
     <file>images/cancel_256.png</file>
