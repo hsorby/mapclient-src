@@ -24,7 +24,7 @@ from PySide import QtCore, QtGui
 
 from mapclient.tools.pmr.ui_authoriseapplicationdialog import Ui_AuthoriseApplicationDialog
 
-from mapclient.settings import info
+from mapclient.tools.pmr.settings.general import PMR
 from mapclient.tools.pmr.core import TokenHelper
 
 logger = logging.getLogger(__name__)
@@ -43,11 +43,12 @@ class AuthoriseApplicationDialog(QtGui.QDialog):
         self._ui = Ui_AuthoriseApplicationDialog()
         self._ui.setupUi(self)
 
-        pmr_info = info.PMRInfo()
+        pmr_info = PMR()
+        client_tokens = pmr_info.get_client_token_kwargs()
         self._helper = TokenHelper(
-            client_key=pmr_info.consumer_public_token,
-            client_secret=pmr_info.consumer_secret_token,
-            site_url=pmr_info.host,
+            client_key=client_tokens['client_key'],
+            client_secret=client_tokens['client_secret'],
+            site_url=pmr_info.host(),
         )
 
     def event(self, event):
@@ -83,7 +84,7 @@ class AuthoriseApplicationDialog(QtGui.QDialog):
         QtGui.QDialog.accept(self)
 
     def _register(self):
-        pmr_info = info.PMRInfo()
+        pmr_info = PMR()
 
         verifier = self._ui.tokenLineEdit.text()
         self._helper.set_verifier(verifier)

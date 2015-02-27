@@ -302,7 +302,7 @@ class AdvancedDialog(QDialog):
             warning_string = '\n  The following plugins failed to update successfully:\n'
             for plugin in unsuccessful_updates:
                 warning_string += '\n\t\t\t' + plugin
-            ret = QMessageBox.warning(self, 'Warning', warning_string + '\n\nPlease inspect the program logs for more information.  \t', QMessageBox.Ok)
+            QMessageBox.warning(self, 'Warning', warning_string + '\n\nPlease inspect the program logs for more information.  \t', QMessageBox.Ok)
 
         self._pluginUpdater._pluginUpdateDict = dict(list(plugins_not_updated.items()) + list(self._pluginUpdater._pluginUpdateDict.items()))
         self.fillUpdatesList()

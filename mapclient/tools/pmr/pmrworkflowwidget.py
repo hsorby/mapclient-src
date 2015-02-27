@@ -25,7 +25,7 @@ from mapclient.tools.pmr.pmrtool import PMRTool, search_domains, \
     workflow_search_string, ontological_search_string
 from mapclient.tools.pmr.authoriseapplicationdialog import AuthoriseApplicationDialog
 from pmr2.client.client import Client
-from mapclient.settings import general
+from mapclient.tools.pmr.settings import general
 import re
 
 class PMRWorkflowWidget(QtGui.QWidget):
@@ -110,7 +110,7 @@ class PMRWorkflowWidget(QtGui.QWidget):
         self._timer.stop()
         self._busy_waiting = True
         search_text = self._ui.lineEditSearch.text()
-        pmr_target = general.PMRInfo().ipaddress
+        pmr_target = general.PMR().host()
         target = pmr_target + '/pmr2_ricordo/owlterms' + '/%s/%d' % (search_text, self._termLookUpLimit)
         client = Client(site=pmr_target, use_default_headers=True)
         state = client(target=target)  # , data=json.dumps({'actions': {'search': 1}, 'fields': {'simple_query': 'femur'}}))  # , endpoint='ricordo', data='femur')

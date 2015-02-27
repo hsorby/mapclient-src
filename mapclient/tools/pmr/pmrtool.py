@@ -1,7 +1,21 @@
 '''
-Created on Jun 20, 2013
+MAP Client, a program to generate detailed musculoskeletal models for OpenSim.
+    Copyright (C) 2012  University of Auckland
+    
+This file is part of MAP Client. (http://launchpad.net/mapclient)
 
-@author: hsorby
+    MAP Client is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    MAP Client is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with MAP Client.  If not, see <http://www.gnu.org/licenses/>..
 '''
 
 import json
@@ -19,7 +33,7 @@ from pmr2.wfctrl.core import CmdWorkspace
 import pmr2.wfctrl.cmd
 
 from mapclient.exceptions import ClientRuntimeError
-from mapclient.settings import general
+from mapclient.tools.pmr.settings import general
 
 logger = logging.getLogger(__name__)
 
@@ -121,7 +135,7 @@ class PMRTool(object):
 
     def make_session(self, pmr_info=None):
         if pmr_info is None:
-            pmr_info = general.PMRInfo()
+            pmr_info = general.PMR()
 
         if self.hasAccess():
             kwargs = pmr_info.get_session_kwargs()
@@ -138,28 +152,28 @@ class PMRTool(object):
         return session
 
     def hasAccess(self):
-        pmr_info = general.PMRInfo()
+        pmr_info = general.PMR()
         return pmr_info.has_access()
 
     def deregister(self):
-        pmr_info = general.PMRInfo()
+        pmr_info = general.PMR()
         pmr_info.update_token(None, None)
 
     # also workaround the resigning redirections by manually resolving
     # redirects while using allow_redirects=False when making all requests
 
     def _search(self, text, search_type):
-        pmr_info = general.PMRInfo()
+        pmr_info = general.PMR()
         session = self.make_session()
 
         if search_type == ontological_search_string:
-            r = session.post('/'.join((pmr_info.host, endpoints['']['ricordo'])),
+            r = session.post('/'.join((pmr_info.host(), endpoints['']['ricordo'])),
                 data=make_form_request('search',
                     simple_query=text,
                 ),
                 allow_redirects=False)
         elif search_type == workflow_search_string:
-            r = session.post('/'.join((pmr_info.host, endpoints['']['map'])),
+            r = session.post('/'.join((pmr_info.host(), endpoints['']['map'])),
                 data=make_form_request('search',
                     workflow_object='Workflow Project',
                     ontological_term=text
@@ -168,7 +182,7 @@ class PMRTool(object):
         else:
             data = json.dumps({'SearchableText': text, 'portal_type': 'Workspace'})
             r = session.post(
-                '/'.join((pmr_info.host, endpoints['']['search'])),
+                '/'.join((pmr_info.host(), endpoints['']['search'])),
                 data=data,
             )
         r.raise_for_status()
@@ -244,9 +258,9 @@ class PMRTool(object):
         return self._client.authorizationUrl(key)
 
     def getDashboard(self):
-        pmr_info = general.PMRInfo()
+        pmr_info = general.PMR()
         session = self.make_session(pmr_info)
-        target = '/'.join([pmr_info.host, endpoints['']['dashboard']])
+        target = '/'.join([pmr_info.host(), endpoints['']['dashboard']])
         r = session.get(target)
         r.raise_for_status()
         return r.json()

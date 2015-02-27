@@ -408,9 +408,10 @@ class Skeleton(object):
             pyside_uic_potentials = ['pyside-uic', 'py2side-uic', 'py3side-uic', 'pyside-uic-py2']
             for pyside_uic in pyside_uic_potentials:
                 try:
-                    result = call([pyside_uic, '-o', os.path.join(step_dir, PYTHON_QT_CONFDIALOG_UI_FILENAME), ui_file])
-                except:
+                    result = call([pyside_uic, '--from-imports', '-o', os.path.join(step_dir, PYTHON_QT_CONFDIALOG_UI_FILENAME), ui_file])
+                except Exception:
                     result = -1
+                
                 if result == 0:
                     break
 

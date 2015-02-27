@@ -179,7 +179,7 @@ class PluginUpdater:
         requires_update = []
         directories = []
         for filename in resource_files:
-            for dirpath, dirnames, filenames in os.walk(directory):
+            for dirpath, _, filenames in os.walk(directory):
                 if filename + '.py' in filenames:
                     directories += [os.path.join(dirpath, filename + '.py')]
                     requires_update += [self.checkResourcesFileContents(os.path.join(dirpath, filename + '.py'))]
@@ -255,3 +255,4 @@ class PluginUpdater:
         for module in modules:
             module = module[:-3] + '_temp.py'
             os.remove(module)
+
