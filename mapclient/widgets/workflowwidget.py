@@ -18,7 +18,7 @@ This file is part of MAP Client. (http://launchpad.net/mapclient)
     along with MAP Client.  If not, see <http://www.gnu.org/licenses/>..
 '''
 import os, logging
-from PySide import QtCore, QtGui
+from PySide import QtGui
 
 from requests.exceptions import HTTPError
 from mapclient.exceptions import ClientRuntimeError
@@ -34,7 +34,6 @@ from mapclient.mountpoints.workflowstep import WorkflowStepMountPoint
 from mapclient.widgets.workflowgraphicsscene import WorkflowGraphicsScene
 from mapclient.core import workflow
 from mapclient.tools.pmr.pmrtool import PMRTool
-from mapclient.tools.pmr.pmrsearchdialog import PMRSearchDialog
 from mapclient.tools.pmr.pmrhgcommitdialog import PMRHgCommitDialog
 from mapclient.widgets.importworkflowdialog import ImportWorkflowDialog
 

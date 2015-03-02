@@ -170,8 +170,8 @@ class MainWindow(QtGui.QMainWindow):
         self.action_Options.triggered.connect(self.showOptionsDialog)
         self.actionPluginManager.triggered.connect(self.showPluginManagerDialog)
         self.actionPluginWizard.triggered.connect(self.showPluginWizardDialog)
-        self.actionPMR.triggered.connect(self.pmr)
-        self.actionAnnotation.triggered.connect(self.annotationTool)
+        self.actionPMR.triggered.connect(self.showPMRTool)
+        self.actionAnnotation.triggered.connect(self.showAnnotationTool)
         
     def showLogInformationDialog(self):
         from mapclient.widgets.loginformation import LogInformation
@@ -293,13 +293,13 @@ class MainWindow(QtGui.QMainWindow):
             except:
                 QtGui.QMessageBox.critical(self, 'Error Writing Step', 'There was an error writing the step, perhaps the step already exists.')
 
-    def pmr(self):
-        from mapclient.tools.pmr.pmrsearchdialog import PMRSearchDialog
-        dlg = PMRSearchDialog(self)
+    def showPMRTool(self):
+        from mapclient.tools.pmr.dialogs.pmrdialog import PMRDialog 
+        dlg = PMRDialog(self)
         dlg.setModal(True)
         dlg.exec_()
 
-    def annotationTool(self):
+    def showAnnotationTool(self):
         from mapclient.tools.annotation.annotationdialog import AnnotationDialog
         location = self._model.workflowManager().location()
         dlg = AnnotationDialog(location, DEFAULT_WORKFLOW_ANNOTATION_FILENAME, self)
