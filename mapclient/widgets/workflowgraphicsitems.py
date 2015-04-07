@@ -23,7 +23,7 @@ from PySide import QtCore, QtGui
 
 from mapclient.core.workflowscene import Connection
 from mapclient.tools.annotation.annotationdialog import AnnotationDialog
-from mapclient.tools.pmr.pmrhghelper import repositoryIsUpToDate
+from mapclient.tools.pmr.pmrdvcshelper import repositoryIsUpToDate
 from mapclient.widgets.utils import createDefaultImageIcon
 
 class ErrorItem(QtGui.QGraphicsItem):

@@ -26,12 +26,15 @@ from mapclient.core.threadcommandmanager import which
 def isHgRepository(location):
     return os.path.exists(os.path.join(location, '.hg'))
 
+def isGitRepository(location):
+    return os.path.exists(os.path.join(location, '.git'))
+
 def repositoryIsUpToDate(location):
     result = True
-    if isHgRepository(location):
-        hg = which('hg')
-        if len(hg) > 0:
-            process = Popen([hg[0], "status", location], stdout=PIPE, stderr=PIPE)
+    if isGitRepository(location):
+        dvcs_cmd = which('git')
+        if len(dvcs_cmd) > 0:
+            process = Popen([dvcs_cmd[0], "status", location], stdout=PIPE, stderr=PIPE)
             outputs = process.communicate()
             stdout = outputs[0]
             stderr = outputs[1]
