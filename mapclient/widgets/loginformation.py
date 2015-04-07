@@ -17,7 +17,10 @@ This file is part of MAP Client. (http://launchpad.net/mapclient)
     You should have received a copy of the GNU General Public License
     along with MAP Client.  If not, see <http://www.gnu.org/licenses/>..
 '''
+from dateutil.parser import parse
+
 from PySide.QtGui import QDialog, QTableWidgetItem
+
 from mapclient.widgets.ui_loginformation import Ui_LogInformation
 from mapclient.settings.general import getLogLocation
 
@@ -39,22 +42,8 @@ class LogInformation(QDialog):
         self._makeConnections()
         
     def fillTable(self, parent=None):
-        log_file = open(getLogLocation(), 'r')
-        log_data = log_file.read()
-        log_file.close()        
-        logs = log_data.split('\n')
-        logs = logs[:-1]
-        self._ui.information_table.setRowCount(len(logs))
-      
-        row_number = 0
-        for log in logs:
-            log_components = log.split(' - ')
-            basic_info = []
-            basic_info += [log_components[1]] + log_components[3:5]
-            for column_number in range(3):
-                self._ui.information_table.setItem(row_number,column_number, \
-                    QTableWidgetItem(basic_info[column_number]))
-            row_number += 1
+        logs = self.loadSession(getLogLocation())
+        self.updateTable(logs)
         
     def _makeConnections(self):
         self._ui.detailsButton.clicked.connect(self.showLogDetails)
@@ -65,12 +54,11 @@ class LogInformation(QDialog):
         dlg = LogDetails(self)
         dlg.setModal(True)
         index = self._ui.information_table.indexFromItem(self._ui.information_table.currentItem())
-        row_number = index.row()
-        selectedItemInformation = self._ui.information_table.item(row_number, 2)
-        selectedItemTime = self._ui.information_table.item(row_number, 0)
-        informationText = selectedItemInformation.text()
-        timeText = selectedItemTime.text()
-        dlg.fillTable(informationText, timeText, self.current_log_file)
+        row = index.row()
+        log_details = []
+        for column in range(self._ui.information_table.columnCount()):
+            log_details.append(self._ui.information_table.item(row, column).text())
+        dlg.fillTable(log_details)
         dlg.exec_()
         
     def loadLogSession(self):
@@ -78,21 +66,34 @@ class LogInformation(QDialog):
         dlg = LoadLogSession(self)
         dlg.setModal(True)
         if dlg.exec_():
-            action = dlg.loadSession()
-            if action != None:
-                self.updateTable(action[0])
-                self.current_log_file = action[1]
+            log_file = dlg.getLogSession()
+            logs = self.loadSession(log_file)
+            if logs:
+                self.updateTable(logs)
+                self.current_log_file = log_file
         
+    def loadSession(self, filename):
+        logs = []
+        with open(filename, 'r') as f:
+            log_data = [line.rstrip('\n') for line in f]
+            for entry in log_data:
+                if entry:
+                    try:
+                        parse(entry[:25])
+                        logs.append(entry.split(' - '))
+                    except Exception:
+                        logs[-1][-1] += entry 
+
+        return logs
+            
     def updateTable(self, logs):
         self._ui.information_table.clearContents()
         self._ui.information_table.setRowCount(len(logs))
+        self._ui.information_table.setColumnCount(5)
+        self._ui.information_table.setColumnHidden(0, True)
+        self._ui.information_table.setColumnHidden(2, True)
  
-        row_number = 0
-        for log in logs:
-            log_components = log.split(' - ')
-            basic_info = []
-            basic_info += [log_components[1]] + log_components[3:5]
-            for column_number in range(3):
-                self._ui.information_table.setItem(row_number,column_number, \
-                    QTableWidgetItem(basic_info[column_number]))
-            row_number += 1
+        for row, log in enumerate(logs):
+            for column, entry in enumerate(log):
+                self._ui.information_table.setItem(row, column, QTableWidgetItem(entry))
+

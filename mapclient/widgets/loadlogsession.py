@@ -17,7 +17,6 @@ This file is part of MAP Client. (http://launchpad.net/mapclient)
     You should have received a copy of the GNU General Public License
     along with MAP Client.  If not, see <http://www.gnu.org/licenses/>..
 '''
-import os
 from PySide.QtGui import QDialog, QFileDialog, QMessageBox
 
 from mapclient.widgets.ui_loadlogsession import Ui_LoadWindow
@@ -51,20 +50,14 @@ class LoadLogSession(QDialog):
             self._ui.lineEdit.insert(previousSession[0])
             
     def validateSelection(self):
-        from mapclient.widgets.ui_loadlogsession import Ui_LoadWindow
         if len(self._ui.lineEdit.text()) == 0:
-            ret = QMessageBox.warning(self, 'Error', '\n  No file selected!\t', QMessageBox.Ok)
+            QMessageBox.warning(self, 'Error', '\n  No file selected!\t', QMessageBox.Ok)
         else:
             self.accept()
         
-    def loadSession(self):
-        filename = self._ui.lineEdit.text()
-        try:
-            log_file = open(filename, 'r')
-            log_data = log_file.read()
-            log_file.close()        
-            logs = log_data.split('\n')
-            logs = logs[:-1]
-            return logs, filename
-        except IOError or FileNotFoundError:
-            ret = QMessageBox.critical(self, 'Error', '\n  Failed to load file!\t', QMessageBox.Ok)
+    def getLogSession(self):
+        """
+        Returns the chosen log file.
+        """
+        return self._ui.lineEdit.text()
+    

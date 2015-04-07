@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'qt/loginformation.ui'
 #
-# Created: Fri Dec 12 12:07:16 2014
+# Created: Tue Apr  7 23:10:51 2015
 #      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -39,9 +39,9 @@ class Ui_LogInformation(object):
         self.information_table.setGridStyle(QtCore.Qt.NoPen)
         self.information_table.setCornerButtonEnabled(False)
         self.information_table.setRowCount(0)
-        self.information_table.setColumnCount(3)
+        self.information_table.setColumnCount(5)
         self.information_table.setObjectName("information_table")
-        self.information_table.setColumnCount(3)
+        self.information_table.setColumnCount(5)
         self.information_table.setRowCount(0)
         item = QtGui.QTableWidgetItem()
         self.information_table.setHorizontalHeaderItem(0, item)
@@ -49,6 +49,10 @@ class Ui_LogInformation(object):
         self.information_table.setHorizontalHeaderItem(1, item)
         item = QtGui.QTableWidgetItem()
         self.information_table.setHorizontalHeaderItem(2, item)
+        item = QtGui.QTableWidgetItem()
+        self.information_table.setHorizontalHeaderItem(3, item)
+        item = QtGui.QTableWidgetItem()
+        self.information_table.setHorizontalHeaderItem(4, item)
         self.information_table.horizontalHeader().setVisible(True)
         self.information_table.horizontalHeader().setCascadingSectionResizes(True)
         self.information_table.horizontalHeader().setDefaultSectionSize(75)
@@ -86,9 +90,11 @@ class Ui_LogInformation(object):
         LogInformation.setWindowTitle(QtGui.QApplication.translate("LogInformation", "Logged Information", None, QtGui.QApplication.UnicodeUTF8))
         self.history.setText(QtGui.QApplication.translate("LogInformation", "History:", None, QtGui.QApplication.UnicodeUTF8))
         self.information_table.setSortingEnabled(True)
-        self.information_table.horizontalHeaderItem(0).setText(QtGui.QApplication.translate("LogInformation", "Time", None, QtGui.QApplication.UnicodeUTF8))
-        self.information_table.horizontalHeaderItem(1).setText(QtGui.QApplication.translate("LogInformation", "Level", None, QtGui.QApplication.UnicodeUTF8))
-        self.information_table.horizontalHeaderItem(2).setText(QtGui.QApplication.translate("LogInformation", "Description", None, QtGui.QApplication.UnicodeUTF8))
+        self.information_table.horizontalHeaderItem(0).setText(QtGui.QApplication.translate("LogInformation", "Date", None, QtGui.QApplication.UnicodeUTF8))
+        self.information_table.horizontalHeaderItem(1).setText(QtGui.QApplication.translate("LogInformation", "Time", None, QtGui.QApplication.UnicodeUTF8))
+        self.information_table.horizontalHeaderItem(2).setText(QtGui.QApplication.translate("LogInformation", "Location", None, QtGui.QApplication.UnicodeUTF8))
+        self.information_table.horizontalHeaderItem(3).setText(QtGui.QApplication.translate("LogInformation", "Level", None, QtGui.QApplication.UnicodeUTF8))
+        self.information_table.horizontalHeaderItem(4).setText(QtGui.QApplication.translate("LogInformation", "Description", None, QtGui.QApplication.UnicodeUTF8))
         self.loadButton.setText(QtGui.QApplication.translate("LogInformation", "Load", None, QtGui.QApplication.UnicodeUTF8))
         self.detailsButton.setText(QtGui.QApplication.translate("LogInformation", "Details", None, QtGui.QApplication.UnicodeUTF8))
         self.closeWindowButton.setText(QtGui.QApplication.translate("LogInformation", "Close", None, QtGui.QApplication.UnicodeUTF8))

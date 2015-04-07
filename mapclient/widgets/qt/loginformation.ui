@@ -89,7 +89,7 @@
         <number>0</number>
        </property>
        <property name="columnCount">
-        <number>3</number>
+        <number>5</number>
        </property>
        <attribute name="horizontalHeaderVisible">
         <bool>true</bool>
@@ -126,10 +126,23 @@
        </attribute>
        <column>
         <property name="text">
+         <string>Date</string>
+        </property>
+        <property name="textAlignment">
+         <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+        </property>
+       </column>
+       <column>
+        <property name="text">
          <string>Time</string>
         </property>
         <property name="textAlignment">
          <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Location</string>
         </property>
        </column>
        <column>

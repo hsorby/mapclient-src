@@ -34,22 +34,9 @@ class LogDetails(QDialog):
         self._ui = Ui_LogDetails()
         self._ui.setupUi(self)
         
-    def fillTable(self, information, time, current_log_file, parent=None):
-        log_file = open(current_log_file, 'r')
-        log_data = log_file.read()
-        log_file.close()        
-        logs = log_data.split('\n')
-        logs = logs[:-1]
+    def fillTable(self, log_details):
         self._ui.detailedTable.setRowCount(5)
         self._ui.detailedTable.setColumnCount(1)
         
-        selectedLog = logs[0].split(' - ')
-        for log in logs:
-            log = log.split(' - ')
-            if log[1] == time and log[4] == information:
-                selectedLog = log
-                
-        row_number = 0
-        for information in selectedLog:
-            self._ui.detailedTable.setItem(row_number, 0, QTableWidgetItem(selectedLog[row_number]))
-            row_number += 1
+        for row, information in enumerate(log_details):
+            self._ui.detailedTable.setItem(row, 0, QTableWidgetItem(information))

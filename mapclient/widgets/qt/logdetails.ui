@@ -80,7 +80,7 @@
          <string>Date:</string>
         </property>
         <property name="textAlignment">
-         <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+         <set>AlignLeft|AlignVCenter</set>
         </property>
        </row>
        <row>
@@ -88,7 +88,7 @@
          <string>Time:</string>
         </property>
         <property name="textAlignment">
-         <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+         <set>AlignLeft|AlignVCenter</set>
         </property>
        </row>
        <row>
@@ -96,7 +96,7 @@
          <string>Source:</string>
         </property>
         <property name="textAlignment">
-         <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+         <set>AlignLeft|AlignVCenter</set>
         </property>
        </row>
        <row>
@@ -104,7 +104,7 @@
          <string>Level:</string>
         </property>
         <property name="textAlignment">
-         <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+         <set>AlignLeft|AlignVCenter</set>
         </property>
        </row>
        <row>
@@ -112,7 +112,7 @@
          <string>Description:</string>
         </property>
         <property name="textAlignment">
-         <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+         <set>AlignLeft|AlignTop</set>
         </property>
        </row>
       </widget>
