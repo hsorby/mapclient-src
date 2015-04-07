@@ -19,12 +19,12 @@ This file is part of MAP Client. (http://launchpad.net/mapclient)
 '''
 from PySide import QtGui
 
-from mapclient.tools.pmr.ui_pmrhgcommitdialog import Ui_PMRHgCommitDialog
+from mapclient.tools.pmr.ui_pmrdvcscommitdialog import Ui_PMRDVCSCommitDialog
 
-class PMRHgCommitDialog(QtGui.QDialog):
+class PMRDVCSCommitDialog(QtGui.QDialog):
     def __init__(self, parent=None):
         QtGui.QDialog.__init__(self, parent)
-        self._ui = Ui_PMRHgCommitDialog()
+        self._ui = Ui_PMRDVCSCommitDialog()
         self._ui.setupUi(self)
 
         self._activated_action = QtGui.QDialogButtonBox.Cancel

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>PMRHgCommitDialog</class>
- <widget class="QDialog" name="PMRHgCommitDialog">
+ <class>PMRDVCSCommitDialog</class>
+ <widget class="QDialog" name="PMRDVCSCommitDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -26,7 +26,7 @@
       <item row="0" column="0">
        <widget class="QLabel" name="label_3">
         <property name="text">
-         <string>comment:</string>
+         <string>commen&amp;t:</string>
         </property>
         <property name="buddy">
          <cstring>commentTextEdit</cstring>
@@ -64,7 +64,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>PMRHgCommitDialog</receiver>
+   <receiver>PMRDVCSCommitDialog</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
