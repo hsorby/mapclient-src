@@ -40,7 +40,7 @@ class MainApplication(object):
         self._pluginManager = PluginManager()
         self._workflowManager = WorkflowManager()
         self._undoManager = UndoManager()
-        self._threadCommandManager = ThreadCommandManager()
+#         self._threadCommandManager = ThreadCommandManager()
 
     def setSize(self, size):
         self._size = size
@@ -63,8 +63,8 @@ class MainApplication(object):
     def pluginManager(self):
         return self._pluginManager
 
-    def threadCommandManager(self):
-        return self._threadCommandManager
+#     def threadCommandManager(self):
+#         return self._threadCommandManager
 
     def writeSettings(self):
         settings = QtCore.QSettings()

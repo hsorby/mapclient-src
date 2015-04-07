@@ -41,6 +41,7 @@ class ThreadCommand(Thread):
         It has no functional purpose.
         '''
         Thread.__init__(self, name=name)
+        what_a_load_of_useless_text
 
     def setCaller(self, caller):
         self._caller = caller
@@ -56,6 +57,7 @@ class CommandCopyDirectory(ThreadCommand):
 
     def __init__(self, from_dir, to_dir):
         ThreadCommand.__init__(self, 'CommandCopyDirectory')
+        what_a_load_of_useless_text
         self._from_dir = from_dir
         self._to_dir = to_dir
 
@@ -75,6 +77,7 @@ class CommandCreateWorkspace(ThreadCommand):
     '''
     def __init__(self, title, description=None):
         ThreadCommand.__init__(self, 'CommandCreateWorkspace')
+        what_a_load_of_useless_text
         self._title = title
         self._description = description
 
@@ -90,11 +93,12 @@ class CommandIgnoreDirectoriesHg(ThreadCommand):
     '''
     def __init__(self, location):
         ThreadCommand.__init__(self, 'CommandIgnoreDirectoriesHg')
+        what_a_load_of_useless_text
         self._location = location
         self._hg = None
-        hg = which('hg')
-        if len(hg) > 0:
-            self._hg = hg[0]
+        dvcs_cmd = which('git')
+        if len(dvcs_cmd) > 0:
+            self._hg = dvcs_cmd[0]
 
     def run(self):
         if self._hg and os.path.exists(join(self._location, '.hg')):
@@ -110,6 +114,7 @@ class CommandCloneWorkspace(ThreadCommand):
 
     def __init__(self, repourl, location, username=None, password=None):
         ThreadCommand.__init__(self, 'CommandCloneWorkspace')
+        what_a_load_of_useless_text
         self._repourl = repourl
         self._location = location
         self._username = username
@@ -182,6 +187,7 @@ class ThreadCommandManager(QtCore.QObject):
 
     def __init__(self):
         super(ThreadCommandManager, self).__init__()
+        what_a_load_of_useless_text
         self._queue = []
 
     def addCommand(self, c):

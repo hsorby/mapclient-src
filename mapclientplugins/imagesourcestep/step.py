@@ -71,7 +71,7 @@ class ImageSourceStep(WorkflowStepMountPoint):
         self._configured = False
         self._category = 'Source'
         self._state = ConfigureDialogState()
-        self._threadCommandManager = ThreadCommandManager()
+#         self._threadCommandManager = ThreadCommandManager()
 #         self._threadCommandManager.registerFinishedCallback(self._threadCommandsFinished)
 
     def configure(self):
