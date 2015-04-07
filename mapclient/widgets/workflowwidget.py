@@ -34,7 +34,7 @@ from mapclient.mountpoints.workflowstep import WorkflowStepMountPoint
 from mapclient.widgets.workflowgraphicsscene import WorkflowGraphicsScene
 from mapclient.core import workflow
 from mapclient.tools.pmr.pmrtool import PMRTool
-from mapclient.tools.pmr.pmrhgcommitdialog import PMRHgCommitDialog
+# from mapclient.tools.pmr.pmrhgcommitdialog import PMRHgCommitDialog
 from mapclient.widgets.importworkflowdialog import ImportWorkflowDialog
 from mapclient.tools.pmr.settings.general import PMR
 import shutil
@@ -406,18 +406,18 @@ class WorkflowWidget(QtGui.QWidget):
             # nothing to commit.
             return True
 
-        dlg = PMRHgCommitDialog(self)
-        dlg.setModal(True)
-        if dlg.exec_() == QtGui.QDialog.Rejected:
-            return False
+#         dlg = PMRHgCommitDialog(self)
+#         dlg.setModal(True)
+#         if dlg.exec_() == QtGui.QDialog.Rejected:
+#             return False
 
-        action = dlg.action()
-        if action == QtGui.QDialogButtonBox.Ok:
-            return True
-        elif action == QtGui.QDialogButtonBox.Save:
-            return self._commitChanges(workflowDir, dlg.comment(), commit_local=True)
+#         action = dlg.action()
+#         if action == QtGui.QDialogButtonBox.Ok:
+#             return True
+#         elif action == QtGui.QDialogButtonBox.Save:
+#             return self._commitChanges(workflowDir, dlg.comment(), commit_local=True)
 
-        return self._commitChanges(workflowDir, dlg.comment())
+        return self._commitChanges(workflowDir, 'Generic comment for saving workflow.')
 
     @handle_runtime_error
     @set_wait_cursor
