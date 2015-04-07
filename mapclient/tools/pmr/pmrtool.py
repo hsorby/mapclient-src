@@ -229,7 +229,6 @@ class PMRTool(object):
         return r.json()
 
     def getObjectInfo(self, target_url):
-        return self._getObjectInfo(target_url)
         try:
             return self._getObjectInfo(target_url)
         except HTTPError as e:
@@ -421,9 +420,12 @@ class PMRTool(object):
         stdout, stderr = cmd.push(workspace,
             username=creds['user'], password=creds['key'])
 
+        if stdout:
+            logger.info(stdout)
         if stderr:
-            raise PMRToolError('Error pushing changes to PMR',
-                'The command line tool gave us this error message:\n\n' +
-                    stderr)
+            logger.error(stderr)
+#             raise PMRToolError('Error pushing changes to PMR',
+#                 'The command line tool gave us this error message:\n\n' +
+#                     stderr)
 
         return stdout, stderr
