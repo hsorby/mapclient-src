@@ -57,7 +57,7 @@
         </size>
        </property>
        <property name="currentIndex">
-        <number>0</number>
+        <number>2</number>
        </property>
        <widget class="QWidget" name="loginPage">
         <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -87,11 +87,33 @@
              <pointsize>7</pointsize>
             </font>
            </property>
+           <property name="contextMenuPolicy">
+            <enum>Qt::DefaultContextMenu</enum>
+           </property>
            <property name="text">
             <string>&lt;a href=&quot;http://mapclient.logout&quot;&gt;deregister&lt;/a&gt;</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="inactivePage">
+        <layout class="QHBoxLayout" name="horizontalLayout_6">
+         <item>
+          <widget class="QLabel" name="inactiveLabel">
+           <property name="font">
+            <font>
+             <pointsize>7</pointsize>
+            </font>
+           </property>
+           <property name="toolTip">
+            <string>No Physiome Model Repository currently set as active</string>
+           </property>
+           <property name="text">
+            <string>inactive</string>
            </property>
           </widget>
          </item>
@@ -118,7 +140,7 @@
       </attribute>
       <layout class="QHBoxLayout" name="horizontalLayout_4">
        <item>
-        <widget class="SearchWidget" name="widget" native="true"/>
+        <widget class="SearchWidget" name="searchWidget" native="true"/>
        </item>
       </layout>
      </widget>
@@ -128,7 +150,7 @@
       </attribute>
       <layout class="QHBoxLayout" name="horizontalLayout_5">
        <item>
-        <widget class="SettingsWidget" name="widget_2" native="true"/>
+        <widget class="SettingsWidget" name="settingsWidget" native="true"/>
        </item>
       </layout>
      </widget>

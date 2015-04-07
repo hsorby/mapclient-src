@@ -86,27 +86,50 @@ class PMR(object):
         settings.endGroup()
         
     def setActiveHost(self, uri):
+        '''
+        if the uri argument is in the dict of instances it will
+        set that host as the active host.  if the uri evaluates 
+        to False the active host will be set to None.
+        '''
         status = False
         if uri in self._instances:
             self._active_host = uri
             status = True
+        elif not uri:
+            self._active_host = None
+            status = True
+            
+        if status:
+            self.writeSettings()
         
         return status
+    
+    def activeHost(self):
+        return self._active_host
             
     def addHost(self, host):
         status = False
-        if host not in self._instances:
+        if host not in self._instances and host:
             self._instances[host] = {'user-public-token': None, 'user-secret-token': None}
+            self.writeSettings()
             status = True
             
         return status
+    
+    def count(self):
+        return len(self._instances)
+    
+    def hosts(self):
+        return iter(self._instances)
     
     def removeHost(self, host):
         status = False
         if host in self._instances:
             del self._instances[host]
             if self._active_host == host:
-                self._active_host = ''
+                self._active_host = None
+                
+            self.writeSettings()
             status = True
             
         return status
@@ -118,15 +141,19 @@ class PMR(object):
         '''
         update the oauth tokens for the currently active PMR target
         '''
-        self._instances[self._active_host]['user-public-token'] = oauth_token
-        self._instances[self._active_host]['user-secret-token'] = oauth_token_secret
-        self.writeSettings()
+        if self._active_host is not None:
+            self._instances[self._active_host]['user-public-token'] = oauth_token
+            self._instances[self._active_host]['user-secret-token'] = oauth_token_secret
+            self.writeSettings()
 
     def has_access(self):
         '''
         return true if both the user tokens are something for the currently active 
         PMR target, false otherwise
         '''
+        if self._active_host is None:
+            return False
+        
         return bool(self._instances[self._active_host]['user-public-token'] and self._instances[self._active_host]['user-secret-token'])
 
     def get_session_kwargs(self):

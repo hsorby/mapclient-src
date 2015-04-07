@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'qt/pmrdialog.ui'
 #
-# Created: Fri Feb 27 15:46:42 2015
+# Created: Tue Mar  3 20:33:42 2015
 #      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -55,10 +55,22 @@ class Ui_PMRDialog(object):
         font = QtGui.QFont()
         font.setPointSize(7)
         self.deregisterLabel.setFont(font)
+        self.deregisterLabel.setContextMenuPolicy(QtCore.Qt.DefaultContextMenu)
         self.deregisterLabel.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.deregisterLabel.setObjectName("deregisterLabel")
         self.horizontalLayout_3.addWidget(self.deregisterLabel)
         self.loginStackedWidget.addWidget(self.logoutPage)
+        self.inactivePage = QtGui.QWidget()
+        self.inactivePage.setObjectName("inactivePage")
+        self.horizontalLayout_6 = QtGui.QHBoxLayout(self.inactivePage)
+        self.horizontalLayout_6.setObjectName("horizontalLayout_6")
+        self.inactiveLabel = QtGui.QLabel(self.inactivePage)
+        font = QtGui.QFont()
+        font.setPointSize(7)
+        self.inactiveLabel.setFont(font)
+        self.inactiveLabel.setObjectName("inactiveLabel")
+        self.horizontalLayout_6.addWidget(self.inactiveLabel)
+        self.loginStackedWidget.addWidget(self.inactivePage)
         self.horizontalLayout.addWidget(self.loginStackedWidget)
         self.verticalLayout.addLayout(self.horizontalLayout)
         self.tabWidget = QtGui.QTabWidget(PMRDialog)
@@ -72,17 +84,17 @@ class Ui_PMRDialog(object):
         self.searchTab.setObjectName("searchTab")
         self.horizontalLayout_4 = QtGui.QHBoxLayout(self.searchTab)
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
-        self.widget = SearchWidget(self.searchTab)
-        self.widget.setObjectName("widget")
-        self.horizontalLayout_4.addWidget(self.widget)
+        self.searchWidget = SearchWidget(self.searchTab)
+        self.searchWidget.setObjectName("searchWidget")
+        self.horizontalLayout_4.addWidget(self.searchWidget)
         self.tabWidget.addTab(self.searchTab, "")
         self.settingsTab = QtGui.QWidget()
         self.settingsTab.setObjectName("settingsTab")
         self.horizontalLayout_5 = QtGui.QHBoxLayout(self.settingsTab)
         self.horizontalLayout_5.setObjectName("horizontalLayout_5")
-        self.widget_2 = SettingsWidget(self.settingsTab)
-        self.widget_2.setObjectName("widget_2")
-        self.horizontalLayout_5.addWidget(self.widget_2)
+        self.settingsWidget = SettingsWidget(self.settingsTab)
+        self.settingsWidget.setObjectName("settingsWidget")
+        self.horizontalLayout_5.addWidget(self.settingsWidget)
         self.tabWidget.addTab(self.settingsTab, "")
         self.verticalLayout.addWidget(self.tabWidget)
         self.buttonBox = QtGui.QDialogButtonBox(PMRDialog)
@@ -92,7 +104,7 @@ class Ui_PMRDialog(object):
         self.verticalLayout.addWidget(self.buttonBox)
 
         self.retranslateUi(PMRDialog)
-        self.loginStackedWidget.setCurrentIndex(0)
+        self.loginStackedWidget.setCurrentIndex(2)
         self.tabWidget.setCurrentIndex(0)
         QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL("accepted()"), PMRDialog.accept)
         QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL("rejected()"), PMRDialog.reject)
@@ -103,6 +115,8 @@ class Ui_PMRDialog(object):
         self.label.setText(QtGui.QApplication.translate("PMRDialog", "Physiome Model Repository", None, QtGui.QApplication.UnicodeUTF8))
         self.registerLabel.setText(QtGui.QApplication.translate("PMRDialog", "<a href=\"mapclient.register\">register</a>", None, QtGui.QApplication.UnicodeUTF8))
         self.deregisterLabel.setText(QtGui.QApplication.translate("PMRDialog", "<a href=\"http://mapclient.logout\">deregister</a>", None, QtGui.QApplication.UnicodeUTF8))
+        self.inactiveLabel.setToolTip(QtGui.QApplication.translate("PMRDialog", "No Physiome Model Repository currently set as active", None, QtGui.QApplication.UnicodeUTF8))
+        self.inactiveLabel.setText(QtGui.QApplication.translate("PMRDialog", "inactive", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.searchTab), QtGui.QApplication.translate("PMRDialog", "Search", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.settingsTab), QtGui.QApplication.translate("PMRDialog", "Settings", None, QtGui.QApplication.UnicodeUTF8))
 

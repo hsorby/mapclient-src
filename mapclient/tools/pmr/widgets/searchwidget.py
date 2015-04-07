@@ -26,6 +26,7 @@ from mapclient.widgets.utils import handle_runtime_error, set_wait_cursor
 from mapclient.tools.pmr.pmrtool import PMRToolError, PMRTool
 from mapclient.core.utils import convertExceptionToMessage
 from mapclient.tools.annotation.annotationtool import AnnotationTool
+from mapclient.tools.pmr.settings.general import PMR
 
 logger = logging.getLogger(__name__)
 
@@ -36,10 +37,14 @@ class SearchWidget(QtGui.QWidget):
         self._ui = Ui_SearchWidget()
         self._ui.setupUi(self)
         
-        self._pmrTool = PMRTool()
+        pmr_info = PMR()
+        self._pmrTool = PMRTool(pmr_info)
         self._annotationTool = AnnotationTool()
         
         self._makeConnections()
+        
+    def setPMRInfo(self, info):
+        self._pmrTool.set_info(info)
 
     def _makeConnections(self):
         self._ui.searchButton.clicked.connect(self._searchClicked)

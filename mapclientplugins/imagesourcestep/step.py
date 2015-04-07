@@ -26,6 +26,7 @@ from mapclientplugins.imagesourcestep.widgets.configuredialog import ConfigureDi
 
 from mapclient.core.threadcommandmanager import ThreadCommandManager
 from mapclient.tools.pmr.pmrtool import PMRTool
+from mapclient.tools.pmr.settings.general import PMR
 
 def getConfigFilename(identifier):
     return identifier + '.conf'
@@ -93,7 +94,8 @@ class ImageSourceStep(WorkflowStepMountPoint):
                 d.setState(self._state)
 
             if pmr_location and os.path.exists(local_dir):
-                pmr_tool = PMRTool()
+                pmr_info = PMR()
+                pmr_tool = PMRTool(pmr_info)
                 pmr_tool.cloneWorkspace(pmr_location, local_dir)
 
             self._configured = d.validate()

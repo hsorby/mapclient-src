@@ -17,11 +17,14 @@ This file is part of MAP Client. (http://launchpad.net/mapclient)
     You should have received a copy of the GNU General Public License
     along with MAP Client.  If not, see <http://www.gnu.org/licenses/>..
 '''
+import logging
 
 from functools import wraps
 from PySide import QtCore, QtGui
 
 from mapclient.exceptions import ClientRuntimeError
+
+logger = logging.getLogger(__name__)
 
 def createDefaultImageIcon(name):
     '''
@@ -89,5 +92,6 @@ def handle_runtime_error(f):
         try:
             return f(self, *a, **kw)
         except ClientRuntimeError as e:
+            logger.error('{0}: {1}'.format(e.title, e.description))
             QtGui.QMessageBox.critical(self, e.title, e.description)
     return do_runtime_error

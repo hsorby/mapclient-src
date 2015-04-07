@@ -24,7 +24,11 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QListWidget" name="hostListWidget"/>
+      <widget class="QListView" name="hostListView">
+       <property name="contextMenuPolicy">
+        <enum>Qt::ActionsContextMenu</enum>
+       </property>
+      </widget>
      </item>
      <item>
       <layout class="QVBoxLayout" name="verticalLayout">
@@ -60,6 +64,11 @@
     </layout>
    </item>
   </layout>
+  <action name="actionAddHost">
+   <property name="text">
+    <string>Add Host</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

@@ -23,6 +23,7 @@ from PySide import QtGui
 from mapclient.tools.pmr.dialogs.ui_pmrdialog import Ui_PMRDialog
 from mapclient.tools.pmr.pmrtool import PMRTool
 from mapclient.tools.pmr.authoriseapplicationdialog import AuthoriseApplicationDialog
+from mapclient.tools.pmr.settings.general import PMR
 
 class PMRDialog(QtGui.QDialog):
     
@@ -30,23 +31,37 @@ class PMRDialog(QtGui.QDialog):
         super(PMRDialog, self).__init__(parent)
         self._ui = Ui_PMRDialog()
         self._ui.setupUi(self)
-
-        self._pmrTool = PMRTool()
+        
+        pmr_info = PMR()
+        self._pmr_tool = PMRTool(pmr_info)
 
         self._makeConnections()
 
         self._updateUi()
 
+    def accept(self, *args, **kwargs):
+        self._ui.settingsWidget.transferModel()
+        return QtGui.QDialog.accept(self, *args, **kwargs)
+    
     def _updateUi(self):
-        if self._pmrTool.hasAccess():
-            self._ui.loginStackedWidget.setCurrentIndex(1)
+        pmr_info = PMR()
+        self._pmr_tool.set_info(pmr_info)
+        if self._pmr_tool.isActive():
+            if self._pmr_tool.hasAccess():
+                self._ui.loginStackedWidget.setCurrentIndex(1)
+            else:
+                self._ui.loginStackedWidget.setCurrentIndex(0)
         else:
-            self._ui.loginStackedWidget.setCurrentIndex(0)
+            self._ui.loginStackedWidget.setCurrentIndex(2)
 
     def _makeConnections(self):
         self._ui.registerLabel.linkActivated.connect(self.register)
         self._ui.deregisterLabel.linkActivated.connect(self.deregister)
+        self._ui.settingsWidget.hostChanged.connect(self._hostChanged)
 
+    def _hostChanged(self, index):
+        self._updateUi()
+        
     def register(self, link):
         if link != 'mapclient.register':
             return
@@ -58,5 +73,7 @@ class PMRDialog(QtGui.QDialog):
         self._updateUi()
 
     def deregister(self):
-        self._pmrTool.deregister()
+        pmr_info = PMR()
+        self._pmr_tool.set_info(pmr_info)
+        self._pmr_tool.deregister()
         self._updateUi()

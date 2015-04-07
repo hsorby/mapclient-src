@@ -29,6 +29,7 @@ from mapclient.tools.pmr.ui_pmrsearchdialog import Ui_PMRSearchDialog
 from mapclient.widgets.utils import set_wait_cursor
 from mapclient.widgets.utils import handle_runtime_error
 from mapclient.core.utils import convertExceptionToMessage
+from mapclient.tools.pmr.settings.general import PMR
 
 logger = logging.getLogger(__name__)
 
@@ -46,7 +47,8 @@ class PMRSearchDialog(QtGui.QDialog):
         self._ui = Ui_PMRSearchDialog()
         self._ui.setupUi(self)
 
-        self._pmrTool = PMRTool()
+        pmr_info = PMR()
+        self._pmrTool = PMRTool(pmr_info)
         self._annotationTool = AnnotationTool()
 
         self._makeConnections()

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'qt/settingswidget.ui'
 #
-# Created: Fri Feb 27 13:51:22 2015
+# Created: Tue Mar  3 09:56:53 2015
 #      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -20,9 +20,10 @@ class Ui_SettingsWidget(object):
         self.verticalLayout_2.addWidget(self.label)
         self.horizontalLayout = QtGui.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
-        self.hostListWidget = QtGui.QListWidget(SettingsWidget)
-        self.hostListWidget.setObjectName("hostListWidget")
-        self.horizontalLayout.addWidget(self.hostListWidget)
+        self.hostListView = QtGui.QListView(SettingsWidget)
+        self.hostListView.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+        self.hostListView.setObjectName("hostListView")
+        self.horizontalLayout.addWidget(self.hostListView)
         self.verticalLayout = QtGui.QVBoxLayout()
         self.verticalLayout.setObjectName("verticalLayout")
         self.addPushButton = QtGui.QPushButton(SettingsWidget)
@@ -35,6 +36,8 @@ class Ui_SettingsWidget(object):
         self.verticalLayout.addItem(spacerItem)
         self.horizontalLayout.addLayout(self.verticalLayout)
         self.verticalLayout_2.addLayout(self.horizontalLayout)
+        self.actionAddHost = QtGui.QAction(SettingsWidget)
+        self.actionAddHost.setObjectName("actionAddHost")
 
         self.retranslateUi(SettingsWidget)
         QtCore.QMetaObject.connectSlotsByName(SettingsWidget)
@@ -44,4 +47,5 @@ class Ui_SettingsWidget(object):
         self.label.setText(QtGui.QApplication.translate("SettingsWidget", "Host list:", None, QtGui.QApplication.UnicodeUTF8))
         self.addPushButton.setText(QtGui.QApplication.translate("SettingsWidget", "Add", None, QtGui.QApplication.UnicodeUTF8))
         self.removePushButton.setText(QtGui.QApplication.translate("SettingsWidget", "Remove", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionAddHost.setText(QtGui.QApplication.translate("SettingsWidget", "Add Host", None, QtGui.QApplication.UnicodeUTF8))
 

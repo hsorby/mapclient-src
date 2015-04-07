@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'qt/searchwidget.ui'
 #
-# Created: Fri Feb 27 13:51:08 2015
+# Created: Tue Mar  3 09:01:29 2015
 #      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!

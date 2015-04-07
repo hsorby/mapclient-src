@@ -33,7 +33,6 @@ from pmr2.wfctrl.core import CmdWorkspace
 import pmr2.wfctrl.cmd
 
 from mapclient.exceptions import ClientRuntimeError
-from mapclient.tools.pmr.settings import general
 
 logger = logging.getLogger(__name__)
 
@@ -127,18 +126,20 @@ class PMRTool(object):
     PROTOCOL = 'application/vnd.physiome.pmr2.json.0'
     UA = 'pmr.jsonclient.Client/0.2'
 
-    def __init__(self):
+    def __init__(self, pmr_info=None):
         '''
         Constructor
         '''
         self._termLookUpLimit = 32
+        self._pmr_info = pmr_info
 
-    def make_session(self, pmr_info=None):
-        if pmr_info is None:
-            pmr_info = general.PMR()
+    def set_info(self, info):
+        self._pmr_info = info
+        
+    def make_session(self):
 
         if self.hasAccess():
-            kwargs = pmr_info.get_session_kwargs()
+            kwargs = self._pmr_info.get_session_kwargs()
             session = OAuth1Session(**kwargs)
         else:
             # normal session without OAuth requirements.
@@ -152,28 +153,28 @@ class PMRTool(object):
         return session
 
     def hasAccess(self):
-        pmr_info = general.PMR()
-        return pmr_info.has_access()
+        return self._pmr_info.has_access()
+    
+    def isActive(self):
+        return True if self._pmr_info.activeHost() else False
 
     def deregister(self):
-        pmr_info = general.PMR()
-        pmr_info.update_token(None, None)
+        self._pmr_info.update_token(None, None)
 
     # also workaround the resigning redirections by manually resolving
     # redirects while using allow_redirects=False when making all requests
 
     def _search(self, text, search_type):
-        pmr_info = general.PMR()
         session = self.make_session()
 
         if search_type == ontological_search_string:
-            r = session.post('/'.join((pmr_info.host(), endpoints['']['ricordo'])),
+            r = session.post('/'.join((self._pmr_info.host(), endpoints['']['ricordo'])),
                 data=make_form_request('search',
                     simple_query=text,
                 ),
                 allow_redirects=False)
         elif search_type == workflow_search_string:
-            r = session.post('/'.join((pmr_info.host(), endpoints['']['map'])),
+            r = session.post('/'.join((self._pmr_info.host(), endpoints['']['map'])),
                 data=make_form_request('search',
                     workflow_object='Workflow Project',
                     ontological_term=text
@@ -182,7 +183,7 @@ class PMRTool(object):
         else:
             data = json.dumps({'SearchableText': text, 'portal_type': 'Workspace'})
             r = session.post(
-                '/'.join((pmr_info.host(), endpoints['']['search'])),
+                '/'.join((self._pmr_info.host(), endpoints['']['search'])),
                 data=data,
             )
         r.raise_for_status()
@@ -258,14 +259,28 @@ class PMRTool(object):
         return self._client.authorizationUrl(key)
 
     def getDashboard(self):
-        pmr_info = general.PMR()
-        session = self.make_session(pmr_info)
-        target = '/'.join([pmr_info.host(), endpoints['']['dashboard']])
+        session = self.make_session()
+        target = '/'.join([self._pmr_info.host(), endpoints['']['dashboard']])
         r = session.get(target)
         r.raise_for_status()
         return r.json()
+    
+    def isValidHost(self, host):
+        session = Session()
 
-    def addWorkspace(self, title, description, storage='mercurial'):
+        session.headers.update({
+            'Accept': self.PROTOCOL,
+            'Content-Type': self.PROTOCOL,
+            'User-Agent': self.UA,
+        })
+        
+        target = '/'.join([host, endpoints['']['dashboard']])
+        r = session.get(target)
+        r.raise_for_status()
+        json_response = r.json()
+        return 'workspace-home' in json_response and 'workspace-add' in json_response
+
+    def addWorkspace(self, title, description, storage='git'):
         session = self.make_session()
 
         dashboard = self.getDashboard()

@@ -17,6 +17,8 @@ This file is part of MAP Client. (http://launchpad.net/mapclient)
     You should have received a copy of the GNU General Public License
     along with MAP Client.  If not, see <http://www.gnu.org/licenses/>..
 '''
+import re
+
 from PySide import QtGui, QtCore
 
 from mapclient.tools.pmr.ui_pmrworkflowwidget import Ui_PMRWorkflowWidget
@@ -26,7 +28,7 @@ from mapclient.tools.pmr.pmrtool import PMRTool, search_domains, \
 from mapclient.tools.pmr.authoriseapplicationdialog import AuthoriseApplicationDialog
 from pmr2.client.client import Client
 from mapclient.tools.pmr.settings import general
-import re
+from mapclient.tools.pmr.settings.general import PMR
 
 class PMRWorkflowWidget(QtGui.QWidget):
     '''
@@ -41,7 +43,8 @@ class PMRWorkflowWidget(QtGui.QWidget):
         self._ui = Ui_PMRWorkflowWidget()
         self._ui.setupUi(self)
 
-        self._pmrTool = PMRTool()
+        pmr_info = PMR()
+        self._pmrTool = PMRTool(pmr_info)
 
         self._termLookUpLimit = 32
 

@@ -70,7 +70,7 @@ class Client(object):
         headers.update(self._credential.getAuthorization('POST', url))
         data = {}
         data['actions'] = {'add': '1'}
-        data['fields'] = {'storage': 'mercurial', 'description': description, 'title': title}
+        data['fields'] = {'storage': 'git', 'description': description, 'title': title}
         response = requests.post(url, headers=headers, data=json.dumps(data), allow_redirects=False)
         
         return response.headers['Location']
